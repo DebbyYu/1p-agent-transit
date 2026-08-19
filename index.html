@@ -463,14 +463,15 @@
     background:rgba(244,246,249,.55); backdrop-filter:blur(2px); overflow:auto;
     opacity:0; transition:opacity .3s ease}
   #brief.on{display:block; opacity:1}
-  .pa{position:absolute; left:clamp(14px,4vw,54px); top:clamp(14px,4vh,46px);
+  .pa{position:absolute; left:var(--announcement-left,clamp(14px,4vw,54px));
+    top:var(--announcement-top,clamp(14px,4vh,46px));
     display:flex; gap:14px; align-items:flex-start; max-width:min(620px,88vw)}
   .pa-spk{flex:none; width:72px; height:72px; filter:drop-shadow(0 6px 14px rgba(20,40,60,.18))}
   .pa-bub{position:relative; background:#fff; border:1px solid var(--line);
     border-radius:4px 18px 18px 18px; padding:20px 22px 16px;
     box-shadow:0 18px 44px rgba(20,30,45,.16);
     transform-origin:top left; animation:pop .45s cubic-bezier(.2,.9,.3,1.15);
-    box-sizing:border-box; width:520px; min-height:456px; display:flex; flex-direction:column}
+    box-sizing:border-box; width:520px; display:flex; flex-direction:column}
   @keyframes pop{from{opacity:0; transform:scale(.86) translate(-8px,-8px)}to{opacity:1;transform:none}}
   .pa-bub::before{content:""; position:absolute; left:-9px; top:14px; width:16px; height:16px;
     background:#fff; border-left:1px solid var(--line); border-top:1px solid var(--line);
@@ -508,9 +509,9 @@
   .bf-go:hover{background:#2b3038}
   .bf-go:focus-visible{outline:3px solid rgba(21,24,29,.22); outline-offset:2px}
   @media (max-width:680px){
-    .pa{left:12px; right:12px; top:12px; max-width:none; gap:0}
+    .pa{left:12px; right:12px; top:var(--announcement-top,12px); max-width:none; gap:0}
     #brief .pa-spk,#onboard .pa-spk{display:none}
-    .pa-bub{width:100%; min-width:0; min-height:456px; padding:16px 15px 14px; border-radius:14px}
+    .pa-bub{width:100%; min-width:0; padding:16px 15px 14px; border-radius:14px}
     .pa-bub::before{display:none}
     .pa-say p{font-size:13.8px; line-height:1.8}
     .bf-go{width:100%}
@@ -520,8 +521,9 @@
     background:rgba(244,246,249,.5); backdrop-filter:blur(2px); overflow:auto;
     opacity:0; transition:opacity .3s ease}
   #onboard.on{display:block; opacity:1}
-  #onboard .pa{left:clamp(14px,4vw,54px); right:auto; top:clamp(14px,4vh,46px);
-    width:min(620px,calc(100vw - clamp(14px,4vw,54px) - 12px)); max-width:none}
+  #onboard .pa{left:var(--announcement-left,clamp(14px,4vw,54px)); right:auto;
+    top:var(--announcement-top,clamp(14px,4vh,46px));
+    width:min(620px,calc(100vw - var(--announcement-left,clamp(14px,4vw,54px)) - 12px)); max-width:none}
   #onboard .pa-say p{font-size:14px; margin:0}
   /* every row shares one grid cell, so they stack without any of them being
      left in normal flow — that is what used to leave a blank band on top */
@@ -563,7 +565,7 @@
     #brief .briefrow p{opacity:1; transform:none; animation:none}
   }
   @media (max-width:680px){
-    #onboard .pa{left:12px; right:12px; top:12px; width:auto}
+    #onboard .pa{left:12px; right:12px; top:var(--announcement-top,12px); width:auto}
     #onboard .pa-bub{min-height:0}
     .obrow{gap:10px} .obart{max-width:none; padding:10px 12px}
   }
@@ -1162,7 +1164,7 @@ function open(id){var L=visible(),i=-1;
 /* ---------------- the conductor's briefing ----------------
    Shown between the departing train and the map: who these agents are, and
    the one idea the map depends on — every station is one agent.        */
-var ANNOUNCE = {"zh": {"kicker": "站內廣播", "sub": "1P AGENT 線 ・ 全線", "lines": ["各位旅客您好，歡迎搭乘 1P Agent 線。", "本線行駛的 1P Agent，是 Microsoft 自行打造、內建於 Microsoft 365 Copilot 的 AI 助理 —— 不需自行開發，開啟即可使用。", "本路網共 <b>20 站、4 條路線，每一個站點即為一個 Agent</b>。", "<b>紅線「新手上路」為免費路線</b>，未持有 Copilot 授權亦可搭乘；其餘三線依用途分為學習、研究與工作。", "抵達各站後，您可先體驗<b>模擬對話</b>，確認該 Agent 的回覆方式，並可查看完整說明與一鍵前往的按鈕。", "行駛期間本線將播送<b>搭乘須知</b>，請隨時留意站內廣播；若需重聽，可按路網上方的擴音器按鈕。", "列車即將發車，請小心月台間隙，謝謝您的搭乘。"], "go": "發車，前往路網圖 →"}, "en": {"kicker": "Station announcement", "sub": "1P AGENT LINE · ALL STOPS", "lines": ["Attention passengers: welcome to the 1P Agent Line.", "The agents on this line are AI assistants Microsoft built into Microsoft 365 Copilot — nothing to develop, just open one and go.", "This network has <b>20 stations across 4 lines, and every station is one agent</b>.", "<b>The red “Start here” line is free to ride</b> — no Copilot licence required. The other three are grouped by learning, research and work.", "On arrival at any station you may try a <b>simulated conversation</b> to see how that agent replies, alongside the full description and a button straight into it.", "<b>Boarding information</b> is announced along the way. To hear it again, select the megaphone above the network.", "The train is about to depart. Please mind the gap, and thank you for travelling with us."], "go": "Depart for the map →"}};
+var ANNOUNCE = {"zh": {"kicker": "站內廣播", "sub": "1P AGENT 線 ・ 全線", "lines": ["各位旅客您好，歡迎搭乘 1P Agent 線。", "本線行駛的 1P Agent，是 Microsoft 自行打造、內建於 Microsoft 365 Copilot 的 AI 助理 —— 不需自行開發，開啟即可使用。", "本路網共 <b>20 站、4 條路線，每一個站點即為一個 Agent</b>。", "<b>紅線「新手上路」為免費路線</b>，未持有 Copilot 授權亦可搭乘；其餘三線依用途分為學習、研究與工作。", "抵達各站後，您可先體驗<b>模擬對話</b>，確認該 Agent 的回覆方式，並可查看完整說明與一鍵前往的按鈕。", "行駛期間本線將播送<b>搭乘須知</b>，請隨時留意站內廣播；若需重聽，可按路網上方的擴音器按鈕。", "列車即將發車，請小心月台間隙。"], "go": "發車，前往路網圖 →"}, "en": {"kicker": "Station announcement", "sub": "1P AGENT LINE · ALL STOPS", "lines": ["Attention passengers: welcome to the 1P Agent Line.", "The agents on this line are AI assistants Microsoft built into Microsoft 365 Copilot — nothing to develop, just open one and go.", "This network has <b>20 stations across 4 lines, and every station is one agent</b>.", "<b>The red “Start here” line is free to ride</b> — no Copilot licence required. The other three are grouped by learning, research and work.", "On arrival at any station you may try a <b>simulated conversation</b> to see how that agent replies, alongside the full description and a button straight into it.", "<b>Boarding information</b> is announced along the way. To hear it again, select the megaphone above the network.", "The train is about to depart. Please mind the gap."], "go": "Depart for the map →"}};
 var brief=document.getElementById('brief');
 function renderBrief(){
   var c=ANNOUNCE[st.lang];
@@ -1176,7 +1178,7 @@ function renderBrief(){
           return '<p'+(lineIndex===0||lineIndex===c.lines.length-1?' class="scene-line"':'')+'>'+line+'</p>'}).join('')+'</div>' }).join('')+'</div>';
   playBrief();
 }
-var BRIEF_LINE_MS=750,BRIEF_GAP_MS=1050,briefT=null;
+var BRIEF_LINE_MS=1100,BRIEF_GAP_MS=1400,briefT=null;
 function playBrief(){
   stopBrief();
   var wrap=document.getElementById('bfSay'),rows=wrap.querySelectorAll('.briefrow');
@@ -1328,13 +1330,22 @@ function playNotes(){
 }
 function stopNotes(){ if(obT){ clearInterval(obT); obT=null } }
 
+function positionAnnouncements(){
+  var trigger=document.getElementById('obOpen').getBoundingClientRect();
+  var top=Math.max(12,Math.round(trigger.top))+'px';
+  var left=Math.round(trigger.left)+'px';
+  brief.style.setProperty('--announcement-top',top);
+  brief.style.setProperty('--announcement-left',left);
+  onboard.style.setProperty('--announcement-top',top);
+  onboard.style.setProperty('--announcement-left',left);
+}
 function showOnboard(){
-  renderOnboard(); onboard.classList.add('on')
+  positionAnnouncements(); renderOnboard(); onboard.classList.add('on')
 }
 function hideOnboard(){ onboard.classList.remove('on'); stopNotes() }
 document.getElementById('obClose').onclick=hideOnboard;
 
-function showBrief(){ renderBrief(); brief.classList.add('on') }
+function showBrief(){ positionAnnouncements(); renderBrief(); brief.classList.add('on') }
 function hideBrief(){ brief.classList.remove('on'); stopBrief() }
 function toMap(){
   hideBrief();
