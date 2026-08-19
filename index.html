@@ -573,10 +573,12 @@
   #brief .briefrow p.revealing{display:block; visibility:hidden}
   #brief .briefrow p:last-child{margin-bottom:0}
   #brief .briefrow.on p.said{display:block; animation:say .32s ease forwards}
+  #brief .briefrow.measure p{display:block; visibility:hidden; animation:none}
   @media (prefers-reduced-motion:reduce){
     #brief .briefrow p{opacity:1; transform:none; animation:none}
   }
   @media (max-width:680px){
+    #brief .pa{top:var(--brief-top,50%); transform:none}
     #onboard .pa{left:12px; right:12px; top:50%; width:auto}
     #onboard .pa-bub{min-height:0}
     .obrow{gap:10px} .obart{max-width:none; padding:10px 12px}
@@ -1192,11 +1194,27 @@ function renderBrief(){
         }).join('')+'</div>';
   playBrief();
 }
-var BRIEF_LINE_MS=1100,BRIEF_GAP_MS=1400,briefT=null;
+var BRIEF_LINE_MS=1100,BRIEF_GAP_MS=1400,briefT=null,briefAlign=null;
 function playBrief(){
   stopBrief();
   var wrap=document.getElementById('bfSay'),rows=wrap.querySelectorAll('.briefrow');
   var button=document.getElementById('bfGo'),actions=button.parentNode,c=ANNOUNCE[st.lang],i=0,lineIndex=0,held=false;
+  function alignGrowth(){
+    var pa=document.querySelector('#brief .pa'),row=rows[i];
+    if(!window.matchMedia('(max-width:680px)').matches){
+      pa.style.removeProperty('--brief-top');
+      return;
+    }
+    var wasHidden=actions.hidden,wasVisibility=actions.style.visibility;
+    row.classList.add('measure');
+    actions.hidden=false;
+    actions.style.visibility='hidden';
+    pa.style.setProperty('--brief-top',Math.max(12,Math.round((window.innerHeight-pa.getBoundingClientRect().height)/2))+'px');
+    row.classList.remove('measure');
+    actions.hidden=wasHidden;
+    actions.style.visibility=wasVisibility;
+  }
+  briefAlign=alignGrowth;
   function revealLine(line){
     var bubble=document.querySelector('#brief .pa-bub'),from=bubble.getBoundingClientRect().height;
     line.classList.add('revealing');
@@ -1248,6 +1266,7 @@ function playBrief(){
     button.classList.toggle('next',i<rows.length-1);
     button.textContent=i<rows.length-1?(st.lang==='zh'?'下一步 →':'Next →'):c.go;
     button.onclick=i<rows.length-1?function(){go(i+1)}:depart;
+    alignGrowth();
     schedule();
   }
   wrap.onmouseenter=function(){held=true}; wrap.onmouseleave=function(){held=false};
@@ -1364,7 +1383,7 @@ function showOnboard(){
 function hideOnboard(){ onboard.classList.remove('on'); stopNotes() }
 document.getElementById('obClose').onclick=hideOnboard;
 
-function showBrief(){ positionAnnouncements(); renderBrief(); brief.classList.add('on') }
+function showBrief(){ positionAnnouncements(); brief.classList.add('on'); renderBrief() }
 function hideBrief(){ brief.classList.remove('on'); stopBrief() }
 function toMap(){
   hideBrief();
@@ -1604,6 +1623,9 @@ function leave(){if(!inside)return;hideOnboard();if(ov.classList.contains('open'
 document.getElementById('enter').onclick=enter;
 document.getElementById('back').onclick=leave;
 document.getElementById('obOpen').onclick=function(){ showOnboard() };
+window.addEventListener('resize',function(){
+  if(brief.classList.contains('on')&&briefAlign)briefAlign();
+});
 document.getElementById('q').addEventListener('input',function(e){
   st.q=e.target.value;
   if(st.q.trim()&&st.line!=='all'){st.line='all';renderKey()}
