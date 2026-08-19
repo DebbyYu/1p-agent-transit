@@ -507,7 +507,10 @@
   .pa-act .spacer{flex:1}
   .bf-go{min-height:48px; border:0; border-radius:8px; padding:12px 22px; background:var(--ink);
     color:#fff; cursor:pointer; font-size:14px; font-weight:700; line-height:1.35}
+  .bf-go.next{min-height:38px; padding:8px 14px; background:#fff; color:var(--ink);
+    border:1px solid var(--line); font-size:13px}
   .bf-go:hover{background:#2b3038}
+  .bf-go.next:hover{background:#eef1f5}
   .bf-go:focus-visible{outline:3px solid rgba(21,24,29,.22); outline-offset:2px}
   @media (max-width:680px){
     .pa{left:12px; right:12px; top:var(--announcement-top,12px); max-width:none; gap:0}
@@ -516,6 +519,7 @@
     .pa-bub::before{display:none}
     .pa-say p{font-size:13.8px; line-height:1.8}
     .bf-go{width:100%}
+    .bf-go.next{width:auto; margin-left:auto}
   }
   /* the boarding notes, read out once when the map opens */
   #onboard{position:fixed; inset:0; z-index:45; display:none;
@@ -1172,11 +1176,14 @@ function renderBrief(){
   var c=ANNOUNCE[st.lang];
   document.getElementById('bfWho').textContent=c.kicker;
   document.getElementById('bfSub').textContent=c.sub;
+  var groups=[c.lines.slice(0,3),c.lines.slice(3)];
   document.getElementById('bfSay').innerHTML=
-    '<div class="briefstage"><div class="briefrow on" data-i="0">'+
-      c.lines.map(function(line,lineIndex){
-        return '<p'+(lineIndex===0||lineIndex===c.lines.length-1?' class="scene-line"':'')+'>'+line+'</p>'
-      }).join('')+'</div></div>';
+    '<div class="briefstage">'+groups.map(function(group,i){
+      return '<div class="briefrow'+(i===0?' on':'')+'" data-i="'+i+'">'+
+        group.map(function(line,j){var lineIndex=i===0?j:j+3;
+          return '<p'+(lineIndex===0||lineIndex===c.lines.length-1?' class="scene-line"':'')+'>'+line+'</p>'
+        }).join('')+'</div>'
+        }).join('')+'</div>';
   playBrief();
 }
 var BRIEF_LINE_MS=1100,BRIEF_GAP_MS=1400,briefT=null;
@@ -1209,7 +1216,7 @@ function playBrief(){
   function schedule(){
     clearTimeout(briefT);
     var lines=rows[i].querySelectorAll('p');
-    var wait=(lineIndex===1||lineIndex===3)?BRIEF_GAP_MS:BRIEF_LINE_MS;
+    var wait=lineIndex<lines.length-1?BRIEF_LINE_MS:BRIEF_GAP_MS;
     briefT=setTimeout(function(){
       if(held||document.hidden){ schedule(); return }
       if(lineIndex<lines.length-1){
@@ -1218,13 +1225,9 @@ function playBrief(){
         schedule();
         return;
       }
-      if(i===rows.length-1){
-        actions.hidden=false;
-        actions.classList.add('reveal');
-        briefT=null;
-        return;
-      }
-      go(i+1);
+      actions.hidden=false;
+      actions.classList.add('reveal');
+      briefT=null;
     },wait);
   }
   function go(n){
@@ -1236,8 +1239,9 @@ function playBrief(){
     lineIndex=0;
     actions.hidden=true;
     actions.classList.remove('reveal');
-    button.textContent=c.go;
-    button.onclick=depart;
+    button.classList.toggle('next',i<rows.length-1);
+    button.textContent=i<rows.length-1?(st.lang==='zh'?'下一步 →':'Next →'):c.go;
+    button.onclick=i<rows.length-1?function(){go(i+1)}:depart;
     schedule();
   }
   wrap.onmouseenter=function(){held=true}; wrap.onmouseleave=function(){held=false};
