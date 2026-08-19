@@ -1170,12 +1170,11 @@ function renderBrief(){
   var c=ANNOUNCE[st.lang];
   document.getElementById('bfWho').textContent=c.kicker;
   document.getElementById('bfSub').textContent=c.sub;
-  var groups=[c.lines.slice(0,2),c.lines.slice(2,4),c.lines.slice(4,7)];
   document.getElementById('bfSay').innerHTML=
-    '<div class="briefstage">'+groups.map(function(group,i){
-      return '<div class="briefrow'+(i===0?' on':'')+'" data-i="'+i+'">'+
-        group.map(function(line,j){var lineIndex=(i===0?0:i===1?2:4)+j;
-          return '<p'+(lineIndex===0||lineIndex===c.lines.length-1?' class="scene-line"':'')+'>'+line+'</p>'}).join('')+'</div>' }).join('')+'</div>';
+    '<div class="briefstage"><div class="briefrow on" data-i="0">'+
+      c.lines.map(function(line,lineIndex){
+        return '<p'+(lineIndex===0||lineIndex===c.lines.length-1?' class="scene-line"':'')+'>'+line+'</p>'
+      }).join('')+'</div></div>';
   playBrief();
 }
 var BRIEF_LINE_MS=1100,BRIEF_GAP_MS=1400,briefT=null;
@@ -1200,7 +1199,7 @@ function playBrief(){
   function schedule(){
     clearTimeout(briefT);
     var lines=rows[i].querySelectorAll('p');
-    var wait=lineIndex<lines.length-1?BRIEF_LINE_MS:(i===rows.length-1?BRIEF_LINE_MS:BRIEF_GAP_MS);
+    var wait=(lineIndex===1||lineIndex===3)?BRIEF_GAP_MS:BRIEF_LINE_MS;
     briefT=setTimeout(function(){
       if(held||document.hidden){ schedule(); return }
       if(lineIndex<lines.length-1){
