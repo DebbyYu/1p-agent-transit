@@ -256,6 +256,9 @@
   .guide-actions button{min-height:44px; border-radius:7px; padding:10px 17px; font-family:inherit;
     font-size:13px; font-weight:700; cursor:pointer}
   .guide-go{border:1px solid var(--ink); background:var(--ink); color:#fff}
+  .guide-go.next{min-height:38px; padding:8px 14px; border-color:var(--line);
+    background:#fff; color:var(--ink)}
+  .guide-go.next:hover{background:#eef1f5}
   @media (max-width:680px){
     .guide .guide-pa{left:12px; right:12px; top:var(--announcement-top,12px); width:auto; gap:0}
     .guide .guide-pa::after,.guide .guide-pa>.pa-spk{display:none}
@@ -268,6 +271,7 @@
     .guide-copy{order:-1; grid-row:1}
     .guide-actions{padding:15px 18px 18px; flex-direction:column-reverse}
     .guide-actions button{width:100%}
+    .guide-actions .guide-go.next{width:auto; align-self:flex-end}
   }
   /* short windows (laptops at 100% scale, split screens): tighten everything
      vertically so the card still fits without scrolling */
@@ -1533,7 +1537,9 @@ function showGuideStep(n){
     steps[i].classList.toggle('on',i===guideStep);
     dots[i].classList.toggle('on',i===guideStep);
   }
-  document.getElementById('guideGo').textContent=guideStep===steps.length-1?t().guideGo:t().guideNext;
+  var guideGo=document.getElementById('guideGo');
+  guideGo.classList.toggle('next',guideStep<steps.length-1);
+  guideGo.textContent=guideStep===steps.length-1?t().guideGo:t().guideNext;
   document.querySelector('.guide-panel').scrollTop=0;
 }
 function guideAgent(el){
