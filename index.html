@@ -207,11 +207,13 @@
     background:var(--ink); color:#fff; padding:10px 18px; border-radius:7px; font-size:13px; z-index:80;
     transition:opacity .2s, transform .2s}
   .toast.show{opacity:1; transform:translate(-50%,0)}
-  .guide{position:fixed; inset:0; z-index:90; display:none; align-items:center; justify-content:center;
-    padding:24px; background:rgba(21,24,29,.58); backdrop-filter:blur(6px)}
-  .guide.open{display:flex}
-  .guide .guide-pa{position:relative; inset:auto; width:min(1126px,100%); max-width:none;
-    align-items:flex-start; margin:auto}
+  .guide{position:fixed; inset:0; z-index:90; display:none; overflow:auto;
+    background:rgba(21,24,29,.58); backdrop-filter:blur(6px)}
+  .guide.open{display:block}
+  .guide .guide-pa{position:absolute; left:var(--announcement-left,24px);
+    top:var(--announcement-top,24px);
+    width:min(1126px,calc(100vw - var(--announcement-left,24px) - 24px)); max-width:none;
+    align-items:flex-start; margin:0}
   .guide .guide-pa::after{content:""; position:absolute; left:77px; top:14px; width:16px; height:16px;
     background:#fff; border-left:1px solid var(--line); border-top:1px solid var(--line);
     transform:rotate(-45deg); border-radius:3px 0 0 0; z-index:2}
@@ -255,8 +257,7 @@
     font-size:13px; font-weight:700; cursor:pointer}
   .guide-go{border:1px solid var(--ink); background:var(--ink); color:#fff}
   @media (max-width:680px){
-    .guide{padding:12px}
-    .guide .guide-pa{gap:0}
+    .guide .guide-pa{left:12px; right:12px; top:var(--announcement-top,12px); width:auto; gap:0}
     .guide .guide-pa::after,.guide .guide-pa>.pa-spk{display:none}
     .guide-panel{height:min(503px,calc(100vh - 24px)); width:100%; border-radius:14px}
     .guide-head{padding:20px 18px 15px}
@@ -1337,6 +1338,8 @@ function positionAnnouncements(){
   brief.style.setProperty('--announcement-left',left);
   onboard.style.setProperty('--announcement-top',top);
   onboard.style.setProperty('--announcement-left',left);
+  guide.style.setProperty('--announcement-top',top);
+  guide.style.setProperty('--announcement-left',left);
 }
 function showOnboard(){
   positionAnnouncements(); renderOnboard(); onboard.classList.add('on')
@@ -1523,7 +1526,7 @@ function showGuideStep(n){
   document.querySelector('.guide-panel').scrollTop=0;
 }
 function guideAgent(el){
-  guideUrl=el.href;renderGuide();guide.classList.add('open');return false;
+  guideUrl=el.href;positionAnnouncements();renderGuide();guide.classList.add('open');return false;
 }
 function closeGuide(){guide.classList.remove('open');guideUrl=''}
 function continueGuide(){
