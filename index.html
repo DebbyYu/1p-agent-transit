@@ -560,6 +560,7 @@
   #brief .pa-bub{transition:height .32s ease}
   #brief .briefrow{justify-content:flex-start}
   #brief .briefrow p{display:none; opacity:0; transform:translateY(6px); animation:none; margin:0 0 10px}
+  #brief .briefrow p.revealing{display:block; visibility:hidden}
   #brief .briefrow p:last-child{margin-bottom:0}
   #brief .briefrow.on p.said{display:block; animation:say .32s ease forwards}
   @media (prefers-reduced-motion:reduce){
@@ -1183,14 +1184,22 @@ function playBrief(){
   stopBrief();
   var wrap=document.getElementById('bfSay'),rows=wrap.querySelectorAll('.briefrow');
   var button=document.getElementById('bfGo'),actions=button.parentNode,c=ANNOUNCE[st.lang],i=0,lineIndex=0,held=false;
-  function resizeBubble(change){
+  function revealLine(line){
     var bubble=document.querySelector('#brief .pa-bub'),from=bubble.getBoundingClientRect().height;
-    change();
+    line.classList.add('revealing');
     var to=bubble.getBoundingClientRect().height;
-    if(Math.abs(to-from)<1)return;
+    if(Math.abs(to-from)<1){
+      line.classList.remove('revealing');
+      line.classList.add('said');
+      return;
+    }
     bubble.style.height=from+'px';
     void bubble.offsetHeight;
-    bubble.style.height=to+'px';
+    requestAnimationFrame(function(){
+      bubble.style.height=to+'px';
+      line.classList.remove('revealing');
+      line.classList.add('said');
+    });
     bubble.addEventListener('transitionend',function done(e){
       if(e.propertyName!=='height')return;
       bubble.removeEventListener('transitionend',done);
@@ -1205,7 +1214,7 @@ function playBrief(){
       if(held||document.hidden){ schedule(); return }
       if(lineIndex<lines.length-1){
         lineIndex++;
-        resizeBubble(function(){lines[lineIndex].classList.add('said')});
+        revealLine(lines[lineIndex]);
         schedule();
         return;
       }
@@ -1309,8 +1318,6 @@ function playNotes(){
   var wrap=document.getElementById('obSay');
   var rows=wrap.querySelectorAll('.obrow'), dots=wrap.querySelectorAll('.obdot');
   if(!rows.length) return;
-  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if(reduce){ wrap.className='pa-say all'; return }
   var i=0, held=false;
   function go(n){
     i=(n+rows.length)%rows.length;
