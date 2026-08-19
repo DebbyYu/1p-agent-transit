@@ -210,10 +210,14 @@
   .guide.open{display:flex}
   .guide .guide-pa{position:relative; inset:auto; width:min(1126px,100%); max-width:none;
     align-items:flex-start; margin:auto}
+  .guide .guide-pa::after{content:""; position:absolute; left:77px; top:14px; width:16px; height:16px;
+    background:#fff; border-left:1px solid var(--line); border-top:1px solid var(--line);
+    transform:rotate(-45deg); border-radius:3px 0 0 0; z-index:2}
   .guide .guide-pa>.pa-spk{width:72px; height:72px}
   .guide-panel{width:min(1040px,100%); max-height:calc(100vh - 48px); overflow:auto; background:#fff;
     border-radius:4px 18px 18px 18px; box-shadow:0 30px 72px rgba(21,24,29,.34); position:relative;
     min-height:0; display:block; flex:1}
+  .guide-panel::before{display:none}
   .guide-head{padding:24px 28px 18px; border-bottom:1px solid var(--line)}
   .guide-kicker{display:flex; align-items:center; gap:8px; font-size:11px; font-weight:800;
     letter-spacing:.14em; color:#0f766e}
@@ -250,8 +254,9 @@
   .guide-go{border:1px solid var(--ink); background:var(--ink); color:#fff}
   @media (max-width:680px){
     .guide{padding:12px}
-    .guide .guide-pa{gap:10px}
-    .guide .guide-pa>.pa-spk{width:58px; height:58px}
+    .guide .guide-pa{gap:8px}
+    .guide .guide-pa::after{left:37px; top:14px; width:16px; height:16px}
+    .guide .guide-pa>.pa-spk{width:38px; height:38px}
     .guide-panel{max-height:calc(100vh - 24px); width:auto}
     .guide-head{padding:20px 18px 15px}
     .guide-head h2{font-size:20px}
