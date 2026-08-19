@@ -260,7 +260,8 @@
     background:#fff; color:var(--ink)}
   .guide-go.next:hover{background:#eef1f5}
   @media (max-width:680px){
-    .guide .guide-pa{left:12px; right:12px; top:var(--announcement-top,12px); width:auto; gap:0}
+    .guide .guide-pa{left:12px; right:12px; top:50%; width:auto; gap:0;
+      transform:translateY(-50%)}
     .guide .guide-pa::after,.guide .guide-pa>.pa-spk{display:none}
     .guide-panel{height:min(503px,calc(100vh - 24px)); width:100%; border-radius:14px}
     .guide-head{padding:20px 18px 15px}
@@ -517,7 +518,8 @@
   .bf-go.next:hover{background:#eef1f5}
   .bf-go:focus-visible{outline:3px solid rgba(21,24,29,.22); outline-offset:2px}
   @media (max-width:680px){
-    .pa{left:12px; right:12px; top:var(--announcement-top,12px); max-width:none; gap:0}
+    .pa{left:12px; right:12px; top:50%; max-width:none; gap:0;
+      transform:translateY(-50%)}
     #brief .pa-spk,#onboard .pa-spk{display:none}
     .pa-bub{width:100%; min-width:0; padding:16px 15px 14px; border-radius:14px}
     .pa-bub::before{display:none}
@@ -575,7 +577,7 @@
     #brief .briefrow p{opacity:1; transform:none; animation:none}
   }
   @media (max-width:680px){
-    #onboard .pa{left:12px; right:12px; top:var(--announcement-top,12px); width:auto}
+    #onboard .pa{left:12px; right:12px; top:50%; width:auto}
     #onboard .pa-bub{min-height:0}
     .obrow{gap:10px} .obart{max-width:none; padding:10px 12px}
   }
