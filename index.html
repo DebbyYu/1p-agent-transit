@@ -499,8 +499,9 @@
   .pa-say p:last-child{margin-bottom:0}
   #brief .scene-line{color:var(--ink2); font-size:13.4px; font-style:italic}
   .pa-act{display:flex; gap:10px; align-items:center; margin-top:17px; padding-top:14px;
-    border-top:1px solid var(--line)}
+    border-top:1px solid var(--line); opacity:1; transform:none}
   .pa-act[hidden]{display:none}
+  .pa-act.reveal{opacity:0; transform:translateY(6px); animation:say .32s ease forwards}
   .pa-act .spacer{flex:1}
   .bf-go{min-height:48px; border:0; border-radius:8px; padding:12px 22px; background:var(--ink);
     color:#fff; cursor:pointer; font-size:14px; font-weight:700; line-height:1.35}
@@ -519,8 +520,8 @@
     background:rgba(244,246,249,.5); backdrop-filter:blur(2px); overflow:auto;
     opacity:0; transition:opacity .3s ease}
   #onboard.on{display:block; opacity:1}
-  #onboard .pa{left:var(--pa-left,22px); right:auto; top:var(--pa-top,92px);
-    width:min(620px,calc(100vw - var(--pa-left,22px) - 12px)); max-width:none}
+  #onboard .pa{left:clamp(14px,4vw,54px); right:auto; top:clamp(14px,4vh,46px);
+    width:min(620px,calc(100vw - clamp(14px,4vw,54px) - 12px)); max-width:none}
   #onboard .pa-say p{font-size:14px; margin:0}
   /* every row shares one grid cell, so they stack without any of them being
      left in normal flow — that is what used to leave a blank band on top */
@@ -553,16 +554,16 @@
   #brief .pa-bub{min-height:0}
   #brief .pa-say{flex:none; display:block}
   #brief .briefstage{width:100%}
-  #brief .briefrow{min-height:9.5em; justify-content:center}
-  #brief .briefrow p{opacity:0; transform:translateY(6px); animation:none; margin:0 0 10px}
+  #brief .pa-bub{transition:height .32s ease}
+  #brief .briefrow{justify-content:flex-start}
+  #brief .briefrow p{display:none; opacity:0; transform:translateY(6px); animation:none; margin:0 0 10px}
   #brief .briefrow p:last-child{margin-bottom:0}
-  #brief .briefrow.on p{animation:say .32s ease forwards}
-  #brief .briefrow.on p:nth-child(2){animation-delay:.75s}
-  #brief .briefrow.on p:nth-child(3){animation-delay:1.5s}
+  #brief .briefrow.on p.said{display:block; animation:say .32s ease forwards}
   @media (prefers-reduced-motion:reduce){
     #brief .briefrow p{opacity:1; transform:none; animation:none}
   }
   @media (max-width:680px){
+    #onboard .pa{left:12px; right:12px; top:12px; width:auto}
     #onboard .pa-bub{min-height:0}
     .obrow{gap:10px} .obart{max-width:none; padding:10px 12px}
   }
@@ -1179,22 +1180,51 @@ var BRIEF_LINE_MS=750,BRIEF_GAP_MS=1050,briefT=null;
 function playBrief(){
   stopBrief();
   var wrap=document.getElementById('bfSay'),rows=wrap.querySelectorAll('.briefrow');
-  var button=document.getElementById('bfGo'),actions=button.parentNode,c=ANNOUNCE[st.lang],i=0,held=false;
+  var button=document.getElementById('bfGo'),actions=button.parentNode,c=ANNOUNCE[st.lang],i=0,lineIndex=0,held=false;
+  function resizeBubble(change){
+    var bubble=document.querySelector('#brief .pa-bub'),from=bubble.getBoundingClientRect().height;
+    change();
+    var to=bubble.getBoundingClientRect().height;
+    if(Math.abs(to-from)<1)return;
+    bubble.style.height=from+'px';
+    void bubble.offsetHeight;
+    bubble.style.height=to+'px';
+    bubble.addEventListener('transitionend',function done(e){
+      if(e.propertyName!=='height')return;
+      bubble.removeEventListener('transitionend',done);
+      bubble.style.height='';
+    });
+  }
   function schedule(){
     clearTimeout(briefT);
-    var lines=rows[i].querySelectorAll('p').length;
+    var lines=rows[i].querySelectorAll('p');
+    var wait=lineIndex<lines.length-1?BRIEF_LINE_MS:(i===rows.length-1?BRIEF_LINE_MS:BRIEF_GAP_MS);
     briefT=setTimeout(function(){
       if(held||document.hidden){ schedule(); return }
-      if(i===rows.length-1){actions.hidden=false;briefT=null;return}
+      if(lineIndex<lines.length-1){
+        lineIndex++;
+        resizeBubble(function(){lines[lineIndex].classList.add('said')});
+        schedule();
+        return;
+      }
+      if(i===rows.length-1){
+        actions.hidden=false;
+        actions.classList.add('reveal');
+        briefT=null;
+        return;
+      }
       go(i+1);
-    },(lines-1)*BRIEF_LINE_MS+(i===rows.length-1?400:BRIEF_GAP_MS));
+    },wait);
   }
   function go(n){
     i=Math.max(0,Math.min(n,rows.length-1));
     for(var k=0;k<rows.length;k++){
       rows[k].className='briefrow'+(k===i?' on':(k===(i-1+rows.length)%rows.length?' out':''));
+      Array.prototype.forEach.call(rows[k].querySelectorAll('p'),function(p,j){p.classList.toggle('said',k===i&&j===0)});
     }
+    lineIndex=0;
     actions.hidden=true;
+    actions.classList.remove('reveal');
     button.textContent=c.go;
     button.onclick=depart;
     schedule();
@@ -1299,9 +1329,6 @@ function playNotes(){
 function stopNotes(){ if(obT){ clearInterval(obT); obT=null } }
 
 function showOnboard(){
-  var trigger=document.getElementById('obOpen'),rect=trigger.getBoundingClientRect();
-  onboard.style.setProperty('--pa-left',Math.max(12,rect.left)+'px');
-  onboard.style.setProperty('--pa-top',Math.max(12,rect.top)+'px');
   renderOnboard(); onboard.classList.add('on')
 }
 function hideOnboard(){ onboard.classList.remove('on'); stopNotes() }
