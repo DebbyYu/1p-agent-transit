@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>1P Agent 路網圖 · Microsoft 365 Copilot</title>
+<title>AI 代理程式路網圖 · Microsoft 365 Copilot</title>
 <style>
   :root{
     --bg:#f2f4f7; --panel:#fff; --ink:#15181d; --ink2:#616b78; --line:#dfe3e9;
@@ -311,8 +311,16 @@
     .cvtext{position:static; width:auto; padding:20px 18px 0; transform:none}
     .train{width:100%}
     .rails{display:none}
-    .intro{gap:10px; margin-bottom:18px}
-    .announcement-fab{width:58px; height:58px}
+    .intro{flex-direction:column; align-items:stretch; gap:12px; margin-bottom:18px}
+    .intro-copy{order:1}
+    .announcement-fab{order:2; align-self:flex-start; display:inline-flex; align-items:center; gap:8px;
+      width:auto; height:36px; padding:0 12px; overflow:visible; border:1px solid var(--line);
+      border-radius:7px; background:#fff; filter:none; color:var(--ink); font-size:12.5px; font-weight:700}
+    .announcement-fab:hover{transform:none; filter:none; background:#eef1f5}
+    .announcement-fab svg{display:none}
+    .announcement-fab::before{content:""; width:7px; height:7px; border-radius:50%;
+      background:#0f766e; animation:onair 1.4s ease-in-out infinite}
+    .announcement-fab::after{content:attr(data-label)}
     .bf-go{width:100%; text-align:center}
     .pa-act{flex-wrap:wrap-reverse; gap:12px}
   }
@@ -891,11 +899,11 @@ var T={
   guideAddH:'首次使用：先加入 Agent', guideAddP:'若出現 Agent 詳細資料，請先按圈選的「Add」，加入後即可開始使用。',
   guideNext:'下一步 →', guideGo:'出發前往 Agent →', guideClose:'關閉搭乘須知', briefNext:'下一則 →',
   cpLinkLbl:"複製連結", cpLinkDone:"已複製連結", linkCopied:"已複製連結，貼到瀏覽器分頁即可開啟",
-  cvt:'1P Agent 路網圖', cvs:'搭乘 1P Agent 線，探索由 Microsoft 打造的 20 個 AI 助理。請隨時留意月台廣播。',
+  cvt:'AI 代理程式路網圖', cvs:'搭乘 1P Agent 線，探索由 Microsoft 打造的 20 個 AI 助理。請隨時留意月台廣播。',
   obGo:'關閉廣播', obOpen:'站內廣播',
-  cta:'點列車開啟路網圖 →', dest:'1P AGENT LINE ・ 全線', brand:'1P Agent 路網圖', back:'← 返回月台',
-  h1:'由 Microsoft 打造的 1P Agent',
-  lede:'每一站是一個 Agent。點任一站看完整說明與範例提示，按「前往 Agent」查看搭乘須知後即可出發。',
+  cta:'點列車開啟路網圖 →', dest:'1P AGENT LINE ・ 全線', brand:'AI 代理程式路網圖', back:'← 返回月台',
+  h1:'由 Microsoft 打造的 AI 代理程式',
+  lede:'每一站為一個代理程式 (Agent)。點任一站看完整說明與範例提示，按「前往 Agent」查看搭乘須知後即可出發。',
   qph:'搜尋 Agent、用途或關鍵字…',
   all:'全部路線', cnt:'顯示 {n} / {t} 站', stopWord:'站',
   ga:'GA', preview:'PREVIEW', frontier:'FRONTIER',
@@ -1170,19 +1178,19 @@ function playBrief(){
   var button=document.getElementById('bfGo'),actions=button.parentNode,c=ANNOUNCE[st.lang],i=0,held=false;
   function schedule(){
     clearTimeout(briefT);
-    if(i>=rows.length-1) return;
     var lines=rows[i].querySelectorAll('p').length;
     briefT=setTimeout(function(){
       if(held||document.hidden){ schedule(); return }
+      if(i===rows.length-1){actions.hidden=false;briefT=null;return}
       go(i+1);
-    },(lines-1)*BRIEF_LINE_MS+BRIEF_GAP_MS);
+    },(lines-1)*BRIEF_LINE_MS+(i===rows.length-1?400:BRIEF_GAP_MS));
   }
   function go(n){
     i=Math.max(0,Math.min(n,rows.length-1));
     for(var k=0;k<rows.length;k++){
       rows[k].className='briefrow'+(k===i?' on':(k===(i-1+rows.length)%rows.length?' out':''));
     }
-    actions.hidden=i!==rows.length-1;
+    actions.hidden=true;
     button.textContent=c.go;
     button.onclick=depart;
     schedule();
@@ -1495,6 +1503,7 @@ function apply(){var T2=t();
   document.getElementById('back').textContent=T2.back;
   document.getElementById('obOpen').setAttribute('aria-label',T2.obOpen);
   document.getElementById('obOpen').title=T2.obOpen;
+  document.getElementById('obOpen').setAttribute('data-label',T2.obOpen);
   document.getElementById('q').placeholder=T2.qph;
   document.getElementById('foot').textContent=T2.foot;
   document.getElementById('mkey').innerHTML=
