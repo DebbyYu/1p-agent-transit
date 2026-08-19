@@ -76,7 +76,10 @@
   .back{border:1px solid var(--line); background:#fff; color:var(--ink2); padding:8px 14px; border-radius:7px;
     cursor:pointer; font-size:13px; font-weight:600}
   .back:hover{background:#eef1f5}
-  .announcement-fab{position:fixed; left:20px; bottom:20px; z-index:32; width:56px; height:56px;
+  .intro{display:flex; align-items:flex-start; gap:14px; margin-bottom:22px}
+  .intro-copy{min-width:0; padding-top:2px}
+  .intro .lede{margin-bottom:0}
+  .announcement-fab{position:relative; flex:none; width:56px; height:56px;
     border:1px solid #c3ddd9; border-radius:50%; background:#fff; cursor:pointer; padding:7px;
     box-shadow:0 8px 24px rgba(20,40,60,.18); transition:transform .16s, box-shadow .16s}
   .announcement-fab:hover{transform:translateY(-2px); box-shadow:0 11px 28px rgba(20,40,60,.22)}
@@ -233,6 +236,8 @@
     .cvtext{position:static; width:auto; padding:20px 18px 0; transform:none}
     .train{width:100%}
     .rails{display:none}
+    .intro{gap:10px; margin-bottom:18px}
+    .announcement-fab{width:50px; height:50px; padding:6px}
     .bf-go{width:100%; text-align:center}
     .pa-act{flex-wrap:wrap-reverse; gap:12px}
   }
@@ -334,6 +339,10 @@
     padding:6px 11px; font-size:11.5px; font-weight:700; cursor:pointer;
     font-family:inherit; white-space:nowrap}
   .ch-again:hover{background:#f2f5f8}
+  @media (max-width:680px){
+    .ch-foot{align-items:stretch; flex-wrap:wrap}
+    .ch-sim{flex:0 0 100%}
+  }
   @media (prefers-reduced-motion:reduce){ .ch-typing i,.ch-reply{animation:none} }
 
   /* ---------- phones ---------- */
@@ -462,9 +471,6 @@
     font-variant-numeric:tabular-nums; vertical-align:1px}
   #onboard .pa-say b{margin-right:6px}
 
-  @media (max-width:680px){
-    .announcement-fab{left:14px; bottom:14px; width:52px; height:52px}
-  }
 </style>
 </head>
 <body class="locked">
@@ -664,17 +670,21 @@
     <div class="seg" id="lang1"><button data-lang="zh" class="on">中文</button><button data-lang="en">EN</button></div>
     <button class="back" id="back"></button>
   </div></header>
-  <button class="announcement-fab" id="obOpen" type="button" aria-label="站內廣播">
-    <svg viewBox="0 0 48 48" aria-hidden="true">
-      <circle cx="24" cy="24" r="23" fill="#eef5f6"/>
-      <path d="M9 20h8l17-9v26l-17-9H9z" fill="#fff" stroke="#b8cdd1" stroke-width="1.8" stroke-linejoin="round"/>
-      <path d="M17 28l3.5 10h6L23 31" fill="#dce9eb" stroke="#b8cdd1" stroke-width="1.8" stroke-linejoin="round"/>
-      <path d="M38 18a9 9 0 0 1 0 12M41 14a14 14 0 0 1 0 20" fill="none" stroke="#38bec2" stroke-width="2.4" stroke-linecap="round"/>
-    </svg>
-  </button>
   <main>
-    <h1 id="h1"></h1>
-    <p class="lede" id="lede"></p>
+    <div class="intro">
+      <button class="announcement-fab" id="obOpen" type="button" aria-label="站內廣播">
+        <svg viewBox="0 0 48 48" aria-hidden="true">
+          <circle cx="24" cy="24" r="23" fill="#eef5f6"/>
+          <path d="M9 20h8l17-9v26l-17-9H9z" fill="#fff" stroke="#b8cdd1" stroke-width="1.8" stroke-linejoin="round"/>
+          <path d="M17 28l3.5 10h6L23 31" fill="#dce9eb" stroke="#b8cdd1" stroke-width="1.8" stroke-linejoin="round"/>
+          <path d="M38 18a9 9 0 0 1 0 12M41 14a14 14 0 0 1 0 20" fill="none" stroke="#38bec2" stroke-width="2.4" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <div class="intro-copy">
+        <h1 id="h1"></h1>
+        <p class="lede" id="lede"></p>
+      </div>
+    </div>
     <div class="key" id="key"></div>
     <div class="mapwrap"><svg class="map" id="map" viewBox="0 0 1230 430" preserveAspectRatio="xMidYMin meet"></svg><div class="vmap" id="vmap"></div></div>
     <div class="mkey" id="mkey"></div>
@@ -720,7 +730,7 @@ var T={
   cpLinkLbl:"複製連結", cpLinkDone:"已複製連結", linkCopied:"已複製連結，貼到瀏覽器分頁即可開啟",
   cvt:'1P Agent 路網圖', cvs:'由 Microsoft 打造的 1P Agent，共 20 站、四條路線。紅線「新手上路」免費就能搭 —— 發車前，月台廣播會先說明幾句。',
   obGo:'關閉廣播', obOpen:'站內廣播',
-  cta:'點列車開啟路網圖 →', dest:'1P AGENT LINE ・ 全線', brand:'1P Agent 路網圖', back:'← 回封面',
+  cta:'點列車開啟路網圖 →', dest:'1P AGENT LINE ・ 全線', brand:'1P Agent 路網圖', back:'← 回月台',
   h1:'由 Microsoft 打造的 1P Agent',
   lede:'每一站是一個 Agent。點任一站看完整說明與範例提示，按「前往 Agent」即可直接開啟。',
   qph:'搜尋 Agent、用途或關鍵字…',
@@ -728,7 +738,7 @@ var T={
   ga:'GA', preview:'PREVIEW', frontier:'FRONTIER',
   mk:['實心 ＝ 已正式推出（GA）','空心 ＝ 預覽中（Preview）','雙環 ＝ Frontier 計畫'],
   stationOf:'{d} 線', open:'前往 Agent →', docs:'官方文件',
-  comicH:'試用看看 · 選一個提示，看它會回什麼',
+  comicH:'互動預覽 · 選擇提示詞，查看模擬回覆',
   chatHint:'模擬畫面', chatAsk:'選一個提示試試看：', chatPick:'送出 →',
   chatSim:'以上為模擬回覆，用來說明產出的形式，非實際結果。',
   chatAgain:'換一個提示', copyPrompt:'複製這個提示',
@@ -746,7 +756,7 @@ var T={
   cpLinkLbl:"Copy link", cpLinkDone:"Link copied", linkCopied:"Link copied — paste it into a browser tab",
   cvt:'1P Agent Transit Map', cvs:'Agents built by Microsoft, grouped into four lines by what they are for. See the whole network at a glance, then select a station to board.',
   obGo:'Close announcement', obOpen:'Announcement',
-  cta:'Select the train to open the map →', dest:'1P AGENT LINE ・ ALL STOPS', brand:'1P Agent Transit Map', back:'← Cover',
+  cta:'Select the train to open the map →', dest:'1P AGENT LINE ・ ALL STOPS', brand:'1P Agent Transit Map', back:'← Back to platform',
   h1:'Agents built by Microsoft',
   lede:'Each station is one agent. Select a station for the full description and example prompts, then Open to go straight in.',
   qph:'Search agents, purposes or keywords…',
@@ -754,7 +764,7 @@ var T={
   ga:'GA', preview:'PREVIEW', frontier:'FRONTIER',
   mk:['Solid = generally available (GA)','Hollow = in preview','Double ring = Frontier program'],
   stationOf:'{d} line', open:'Open the agent →', docs:'Official docs',
-  comicH:'Try it · pick a prompt and see what comes back',
+  comicH:'Interactive preview · Select a prompt to view a simulated response',
   chatHint:'Simulated', chatAsk:'Pick a prompt to try:', chatPick:'Send →',
   chatSim:'A simulated reply, shown to illustrate the shape of the output — not a real result.',
   chatAgain:'Try another', copyPrompt:'Copy this prompt',
