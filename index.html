@@ -131,7 +131,8 @@
   .kb i{width:14px; height:5px; border-radius:3px; background:var(--ink2)}
   .kb.on{background:var(--ink); color:#fff; border-color:var(--ink)}
   .kb.on i{background:#fff !important}
-  .cnt{margin-left:auto; font-size:12.5px; color:var(--ink2)}
+  /* 11px = .mapwrap border + padding, so the count lines up with the map itself */
+  .cnt{margin-left:auto; margin-right:11px; font-size:12.5px; color:var(--ink2)}
 
   .mapwrap{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:10px;
     box-shadow:0 4px 16px rgba(21,24,29,.05); overflow:hidden}
@@ -163,6 +164,7 @@
   .mapwrap.searching .vl h3{opacity:.35}
   @media (max-width:680px){
     .mapwrap{overflow:visible; padding:12px 12px 14px}
+    .cnt{margin-right:13px}
     svg.map{display:none}
     .vmap{display:block}
   }
@@ -187,8 +189,10 @@
     font-size:12.4px; color:var(--ink2)}
   .mkey span{display:inline-flex; align-items:center; gap:7px}
   .mkey svg{flex:none}
+  .mkey .mkh{font-weight:700; color:var(--ink)}
 
   footer{max-width:1320px; margin:0 auto; padding:24px 22px 96px; color:var(--ink2); font-size:12.4px; line-height:1.85}
+  footer .footh{display:block; font-weight:700; color:var(--ink); margin-bottom:4px}
 
   .ov{position:fixed; inset:0; z-index:50; display:none; align-items:center; justify-content:center;
     background:rgba(21,24,29,.44); backdrop-filter:blur(5px);
@@ -367,7 +371,8 @@
     .brand{grid-area:brand; min-width:0}
     .brand span{display:inline; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
     .sw{grid-area:search; min-width:0}
-    header .seg{grid-area:lang}
+    /* justify-self keeps the toggle at its natural width when the longer EN back button widens the column */
+    header .seg{grid-area:lang; justify-self:end}
     header .back{grid-area:back; justify-self:end; white-space:nowrap}
     header .seg button{padding:6px 10px}
     main{padding:16px 14px 50px}
@@ -953,7 +958,7 @@
     <div class="mapwrap"><svg class="map" id="map" viewBox="0 0 1230 430" preserveAspectRatio="xMidYMin meet"></svg><div class="vmap" id="vmap"></div></div>
     <div class="mkey" id="mkey"></div>
   </main>
-  <footer id="foot"></footer>
+  <footer><b class="footh" id="footh"></b><span id="foot"></span></footer>
 </div>
 
 <div class="ov" id="ov"><div class="card" id="card"></div></div>
@@ -1069,12 +1074,13 @@ var T={
   replayHint:'如需再次查看搭乘指南，請點選大聲公圖示。',
   replayHintMobile:'如需再次查看搭乘指南，請點選「站內廣播」。',
   qph:'搜尋 Agent、用途或關鍵字…',
-  all:'全部路線', cnt:'顯示 {n} / {t} 站', stopWord:'站',
+  all:'全部路線', cnt:'本次行駛 {n} / {t} 站', stopWord:'站',
   ga:'GA', preview:'PREVIEW', frontier:'FRONTIER',
+  mkH:'站點標示',
   mk:['實心 ＝ 已正式推出（GA）','空心 ＝ 預覽中（Preview）','雙環 ＝ Frontier 計畫'],
   stationOf:'{d} 線', open:'前往 Agent →', docs:'官方文件',
-  comicH:'互動預覽 · 選擇提示詞，查看模擬回覆',
-  chatHint:'模擬畫面', chatAsk:'選一個提示試試看：', chatPick:'送出 →',
+  comicH:'試乘體驗 · 選擇提示詞，查看模擬回覆',
+  chatHint:'試乘模擬', chatAsk:'選一個提示試試看：', chatPick:'送出 →',
   chatSim:'以上為模擬回覆，用來說明產出的形式，非實際結果。',
   chatAgain:'換一個提示', copyPrompt:'複製這個提示',
   descH:'路線說明', canH:'能做什麼', whoH:'適合誰', pitchH:'一句話推薦', promptsH:'範例提示（可直接複製）',
@@ -1086,6 +1092,7 @@ var T={
          ['02','站點符號','實心站點＝已正式推出（GA）；空心站點＝預覽中（Preview）；雙環站點＝需加入 Frontier 計畫。'],
          ['03','乘車前提','紅線「新手上路」不需要 Copilot 授權；其餘路線需要 Microsoft 365 Copilot 授權。若無法開啟，可能是管理員尚未啟用，或尚未推送到你的環境。']],
   obBack:'← 上一步', obNext:'下一步 →',
+  footH:'營運資訊',
   foot:'Word、Excel、PowerPoint Agent 依 Microsoft 官方文件說明，有無 Copilot 授權皆可使用；Idea Coach 為宣告式 Agent，依官方說明不需額外費用。各 Agent 的類型與推出狀態依 Microsoft 官方資訊整理；各 Agent 的說明皆參考 Microsoft 官方文件。Agent 會持續推出與更新，實際可用範圍依授權與租戶設定而異。'
  },
  en:{
@@ -1104,12 +1111,13 @@ var T={
   replayHint:'To review the boarding guide, select the megaphone icon.',
   replayHintMobile:'To review the boarding guide, select “Announcement”.',
   qph:'Search agents, purposes or keywords…',
-  all:'All lines', cnt:'showing {n} / {t} stations', stopWord:'stops',
+  all:'All lines', cnt:'in service {n} / {t} stations', stopWord:'stops',
   ga:'GA', preview:'PREVIEW', frontier:'FRONTIER',
+  mkH:'Station markers',
   mk:['Solid = generally available (GA)','Hollow = in preview','Double ring = Frontier program'],
   stationOf:'{d} line', open:'Open the agent →', docs:'Official docs',
-  comicH:'Interactive preview · Select a prompt to view a simulated response',
-  chatHint:'Simulated', chatAsk:'Pick a prompt to try:', chatPick:'Send →',
+  comicH:'Trial ride · Select a prompt to view a simulated response',
+  chatHint:'Trial ride', chatAsk:'Pick a prompt to try:', chatPick:'Send →',
   chatSim:'A simulated reply, shown to illustrate the shape of the output — not a real result.',
   chatAgain:'Try another', copyPrompt:'Copy this prompt',
   descH:'About this stop', canH:'What it does', whoH:'Who it suits', pitchH:'In one line', promptsH:'Example prompts (copy and paste)',
@@ -1121,6 +1129,7 @@ var T={
          ['02','Station markers','Solid means generally available. Hollow means preview. A double ring means the Frontier program.'],
          ['03','Before you travel','A Microsoft 365 Copilot licence. If it will not open, your admin may not have enabled it yet.']],
   obBack:'← Previous step', obNext:'Next step →',
+  footH:'Service information',
   foot:'Agent types and release status are compiled from Microsoft’s official information; all agent descriptions follow Microsoft’s official documentation. Agents ship and change over time; availability depends on your licence and tenant settings.'
  }
 };
@@ -1767,7 +1776,9 @@ function apply(){var T2=t();
   document.getElementById('obOpen').setAttribute('data-label',T2.obOpen);
   document.getElementById('q').placeholder=T2.qph;
   document.getElementById('foot').textContent=T2.foot;
+  document.getElementById('footh').textContent=T2.footH;
   document.getElementById('mkey').innerHTML=
+    '<span class="mkh">'+esc(T2.mkH)+'</span>'+
     '<span><svg width="22" height="22"><circle cx="11" cy="11" r="8" style="fill:#616b78;stroke:#616b78;stroke-width:3"/></svg>'+esc(T2.mk[0])+'</span>'+
     '<span><svg width="22" height="22"><circle cx="11" cy="11" r="8" style="fill:#fff;stroke:#616b78;stroke-width:3.4"/></svg>'+esc(T2.mk[1])+'</span>'+
     '<span><svg width="26" height="26"><circle cx="13" cy="13" r="11.5" style="fill:#fff;stroke:#616b78;stroke-width:1.8"/><circle cx="13" cy="13" r="7" style="fill:#fff;stroke:#616b78;stroke-width:3.4"/></svg>'+esc(T2.mk[2])+'</span>';
