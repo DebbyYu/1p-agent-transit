@@ -137,8 +137,8 @@
   }
   .stop{cursor:pointer}
   .stop .hit{fill:transparent}
-  .stop .dot{transition:transform .16s ease; transform-origin:center; transform-box:fill-box}
-  .stop:hover .dot{transform:scale(1.22)}
+  .stop .dot,.stop .ring{transition:transform .16s ease; transform-origin:center; transform-box:fill-box}
+  .stop:hover .dot,.stop:hover .ring{transform:scale(1.22)}
   .stop .lbl{font-family:var(--sans); font-size:12.5px; font-weight:700; fill:var(--ink);
     transition:transform .16s ease, fill .16s ease; transform-origin:center; transform-box:fill-box}
   .stop .sub{font-family:var(--sans); font-size:10px; fill:var(--ink2);
@@ -1095,7 +1095,7 @@ function marker(a,cx,cy,c){
     return '<circle class="dot" cx="'+cx+'" cy="'+cy+'" r="8.5" style="fill:'+c+'; stroke:'+c+'; stroke-width:3.5"/>';
   if(a.status==='preview')
     return '<circle class="dot" cx="'+cx+'" cy="'+cy+'" r="8.5" style="fill:#fff; stroke:'+c+'; stroke-width:4"/>';
-  return '<circle cx="'+cx+'" cy="'+cy+'" r="13.5" style="fill:#fff; stroke:'+c+'; stroke-width:2.2"/>'+
+  return '<circle class="ring" cx="'+cx+'" cy="'+cy+'" r="13.5" style="fill:#fff; stroke:'+c+'; stroke-width:2.2"/>'+
          '<circle class="dot" cx="'+cx+'" cy="'+cy+'" r="7.5" style="fill:#fff; stroke:'+c+'; stroke-width:4"/>';
 }
 
@@ -1111,13 +1111,13 @@ var LANE={free:55, grow:145, insight:235, work:325};
 var B1=565, B2=755, XEND=1150;
 var GEO={
   free:   { path:[[PAD,LANE.free],[B1,LANE.free],[B2,LANE.insight],[XEND,LANE.insight]],
-            stops:[[246,LANE.free,'up'],[458,LANE.free,'up'],[789,LANE.insight,'up'],[1033,LANE.insight,'down']] },
+            stops:[[246,LANE.free,'up'],[458,LANE.free,'up'],[881,LANE.insight,'up'],[1048,LANE.insight,'down']] },
   grow:   { path:[[PAD,LANE.grow],[B1,LANE.grow],[B2,LANE.free],[XEND,LANE.free]],
-            stops:[[260,LANE.grow,'down'],[370,LANE.grow,'down'],[485,LANE.grow,'down'],[797,LANE.free,'up'],[952,LANE.free,'up'],[1119,LANE.free,'up']] },
+            stops:[[260,LANE.grow,'up'],[370,LANE.grow,'down'],[485,LANE.grow,'up'],[797,LANE.free,'up'],[952,LANE.free,'up'],[1119,LANE.free,'up']] },
   insight:{ path:[[PAD,LANE.insight],[B1,LANE.insight],[B2,LANE.work],[XEND,LANE.work]],
-            stops:[[273,LANE.insight,'down'],[532,LANE.insight,'down'],[819,LANE.work,'down'],[1100,LANE.work,'down']] },
+            stops:[[315,LANE.insight,'down'],[520,LANE.insight,'down'],[845,LANE.work,'down'],[1100,LANE.work,'down']] },
   work:   { path:[[PAD,LANE.work],[B1,LANE.work],[B2,LANE.grow],[XEND,LANE.grow]],
-            stops:[[307,LANE.work,'down'],[403,LANE.work,'down'],[553,LANE.work,'down'],[789,LANE.grow,'up'],[973,LANE.grow,'up'],[1122,LANE.grow,'down']] }
+            stops:[[265,LANE.work,'down'],[375,LANE.work,'down'],[485,LANE.work,'down'],[789,LANE.grow,'up'],[973,LANE.grow,'up'],[1122,LANE.grow,'down']] }
 };
 var LANE_ORDER=["free", "grow", "insight", "work"];
 var LBLW=124;   /* usable width of the reserved label column */
