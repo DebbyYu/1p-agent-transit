@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="format-detection" content="telephone=no,date=no,address=no,email=no">
 <title>AI 代理程式路網圖 · Microsoft 365 Copilot</title>
 <style>
   :root{
@@ -12,8 +13,11 @@
     --sans:"Microsoft JhengHei UI","Microsoft JhengHei","Segoe UI","Noto Sans TC",sans-serif;
   }
   *{box-sizing:border-box} html,body{margin:0;padding:0}
-  body{font-family:var(--sans); background:var(--bg); color:var(--ink); -webkit-font-smoothing:antialiased}
+  body{font-family:var(--sans); background:var(--bg); color:var(--ink); -webkit-font-smoothing:antialiased;
+    -webkit-text-size-adjust:100%}
   body.locked{overflow:hidden}
+  /* iOS Safari paints unstyled control text in system blue */
+  button,input,select,textarea{color:inherit; -webkit-text-fill-color:currentColor}
   button{font-family:inherit}
 
   #cover{position:fixed; inset:0; z-index:60; display:flex; align-items:center; justify-content:center;
@@ -189,7 +193,6 @@
     font-size:12.4px; color:var(--ink2)}
   .mkey span{display:inline-flex; align-items:center; gap:7px}
   .mkey svg{flex:none}
-  .mkey .mkh{font-weight:700; color:var(--ink)}
 
   footer{max-width:1320px; margin:0 auto; padding:24px 22px 96px; color:var(--ink2); font-size:12.4px; line-height:1.85}
   footer .footh{display:block; font-weight:700; color:var(--ink); margin-bottom:4px}
@@ -366,12 +369,11 @@
     .pr .cp{align-self:flex-start}
     .x{top:11px; right:12px}
     header{padding:0}
-    .hin{display:grid; grid-template-columns:minmax(0,1fr) auto;
-      grid-template-areas:"brand back" "search lang"; padding:11px 14px; gap:9px 10px}
+    .hin{display:grid; grid-template-columns:minmax(0,1fr) auto auto;
+      grid-template-areas:"brand lang back" "search search search"; padding:11px 14px; gap:9px 10px}
     .brand{grid-area:brand; min-width:0}
     .brand span{display:inline; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
     .sw{grid-area:search; min-width:0}
-    /* justify-self keeps the toggle at its natural width when the longer EN back button widens the column */
     header .seg{grid-area:lang; justify-self:end}
     header .back{grid-area:back; justify-self:end; white-space:nowrap}
     header .seg button{padding:6px 10px}
@@ -1076,7 +1078,6 @@ var T={
   qph:'搜尋 Agent、用途或關鍵字…',
   all:'全部路線', cnt:'本次行駛 {n} / {t} 站', stopWord:'站',
   ga:'GA', preview:'PREVIEW', frontier:'FRONTIER',
-  mkH:'站點標示',
   mk:['實心 ＝ 已正式推出（GA）','空心 ＝ 預覽中（Preview）','雙環 ＝ Frontier 計畫'],
   stationOf:'{d} 線', open:'前往 Agent →', docs:'官方文件',
   comicH:'試乘體驗 · 選擇提示詞，查看模擬回覆',
@@ -1113,7 +1114,6 @@ var T={
   qph:'Search agents, purposes or keywords…',
   all:'All lines', cnt:'in service {n} / {t} stations', stopWord:'stops',
   ga:'GA', preview:'PREVIEW', frontier:'FRONTIER',
-  mkH:'Station markers',
   mk:['Solid = generally available (GA)','Hollow = in preview','Double ring = Frontier program'],
   stationOf:'{d} line', open:'Open the agent →', docs:'Official docs',
   comicH:'Trial ride · Select a prompt to view a simulated response',
@@ -1778,7 +1778,6 @@ function apply(){var T2=t();
   document.getElementById('foot').textContent=T2.foot;
   document.getElementById('footh').textContent=T2.footH;
   document.getElementById('mkey').innerHTML=
-    '<span class="mkh">'+esc(T2.mkH)+'</span>'+
     '<span><svg width="22" height="22"><circle cx="11" cy="11" r="8" style="fill:#616b78;stroke:#616b78;stroke-width:3"/></svg>'+esc(T2.mk[0])+'</span>'+
     '<span><svg width="22" height="22"><circle cx="11" cy="11" r="8" style="fill:#fff;stroke:#616b78;stroke-width:3.4"/></svg>'+esc(T2.mk[1])+'</span>'+
     '<span><svg width="26" height="26"><circle cx="13" cy="13" r="11.5" style="fill:#fff;stroke:#616b78;stroke-width:1.8"/><circle cx="13" cy="13" r="7" style="fill:#fff;stroke:#616b78;stroke-width:3.4"/></svg>'+esc(T2.mk[2])+'</span>';
