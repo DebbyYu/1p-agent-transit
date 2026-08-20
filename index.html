@@ -199,7 +199,8 @@
   .c-foot{display:flex; justify-content:space-between; align-items:center; gap:10px; padding:16px 32px 22px;
     border-top:1px solid var(--line); font-size:12.6px; color:var(--ink2)}
   .c-foot button{border:1px solid var(--line); background:#fff; border-radius:6px; padding:7px 14px;
-    cursor:pointer; font-size:13px; font-weight:600}
+    cursor:pointer; font-size:13px; font-weight:600; display:inline-flex; align-items:center; gap:5px}
+  .c-foot .nav-prev .nav-arrow{order:-1}
   .c-foot button:disabled{opacity:.34; cursor:default}
   .x{position:absolute; top:16px; right:18px; border:0; background:#eef1f5; width:31px; height:31px;
     border-radius:6px; cursor:pointer; font-size:15px; line-height:1; z-index:3}
@@ -294,11 +295,14 @@
   /* ---------- phones ---------- */
   @media (max-width:680px){
     .ov{padding:14px 12px}
-    .card{max-height:calc(100vh - 28px); border-radius:14px}
+    .card{max-height:min(76dvh,640px); border-radius:14px;
+      -webkit-overflow-scrolling:touch; overscroll-behavior:contain; touch-action:pan-y}
     .c-head{padding:20px 18px 16px} .c-col{padding:18px 18px 22px}
     .c-body.one{padding:18px 16px 22px}
     .c-foot{padding:13px 18px 18px; font-size:11.6px}
-    .c-foot button{padding:9px 12px}
+    .c-foot button{min-width:58px; padding:8px 12px; flex-direction:column; gap:3px; line-height:1.05}
+    .c-foot .nav-prev .nav-arrow{order:initial}
+    .c-foot .nav-arrow{font-size:16px}
     .c-head h2{font-size:21px}
     .c-act{gap:7px} .btn{padding:10px 13px; font-size:12.6px}
     .pr{flex-direction:column; align-items:stretch; gap:8px}
@@ -438,10 +442,12 @@
   /* ---------- phones ---------- */
   @media (max-width:680px){
     .ov{padding:14px 12px}
-    .card{max-height:calc(100vh - 28px); border-radius:14px}
+    .card{max-height:min(76dvh,640px); border-radius:14px;
+      -webkit-overflow-scrolling:touch; overscroll-behavior:contain; touch-action:pan-y}
     .c-head{padding:20px 18px 16px} .c-col{padding:18px 18px 22px}
     .c-body.one{padding:18px 16px 22px}
-    .c-foot{padding:13px 18px 18px; font-size:11.6px}
+    .c-foot{position:sticky; bottom:0; z-index:4; padding:13px 18px 18px;
+      background:#fff; font-size:11.6px}
     .c-foot button{padding:9px 12px}
     .c-head h2{font-size:21px}
     .c-act{gap:7px} .btn{padding:10px 13px; font-size:12.6px}
@@ -936,7 +942,7 @@ var T={
   descH:'路線說明', canH:'能做什麼', whoH:'適合誰', pitchH:'一句話推薦', promptsH:'範例提示（可直接複製）',
   copy:'複製', copied:'已複製，貼到 Copilot 就能用', copyManual:'請手動選取複製',
   openBlocked:'瀏覽器擋住了新分頁，已幫你複製連結，貼到網址列即可開啟',
-  prev:'← 上一站', next:'下一站 →', pos:'第 {i} / {n} 站　·　← → 切換，Esc 關閉',
+  prev:'上一站', next:'下一站', pos:'第 {i} / {n} 站　·　← → 切換，Esc 關閉',
   noRes:'找不到符合「{q}」的站點，換個關鍵字試試。',
   notes:[['01','怎麼搭乘','點任一站可以先試用模擬對話、看看它會回什麼，按「前往 Agent」直接開啟；第一次使用時按一下「新增代理程式」即可。'],
          ['02','站點符號','實心站點＝已正式推出（GA）；空心站點＝預覽中（Preview）；雙環站點＝需加入 Frontier 計畫。'],
@@ -968,7 +974,7 @@ var T={
   descH:'About this stop', canH:'What it does', whoH:'Who it suits', pitchH:'In one line', promptsH:'Example prompts (copy and paste)',
   copy:'Copy', copied:'Copied — paste it into Copilot', copyManual:'Please select and copy manually',
   openBlocked:'Your browser blocked the new tab — the link is copied, paste it into the address bar',
-  prev:'← Previous', next:'Next →', pos:'Station {i} of {n}　·　← → to move, Esc to close',
+  prev:'Previous', next:'Next', pos:'Station {i} of {n}　·　← → to move, Esc to close',
   noRes:'No station matches “{q}”. Try another keyword.',
   notes:[['01','How to board','Select a station to try a simulated conversation and see what comes back, then Open the agent. Select Add the first time you use one.'],
          ['02','Station markers','Solid means generally available. Hollow means preview. A double ring means the Frontier program.'],
@@ -1525,9 +1531,9 @@ function draw(L,i){var T2=t(),a=L[i],d=D(a),col=LC[a.domain];cur={L:L,i:i};
    '<div class="c-body one">'+
      '<h4>'+esc(T2.comicH)+'</h4>'+comic(a,col)+
    '</div>'+
-   '<div class="c-foot"><button id="pv" '+(i===0?'disabled':'')+'>'+esc(T2.prev)+'</button>'+
+   '<div class="c-foot"><button class="nav-prev" id="pv" '+(i===0?'disabled':'')+'><span>'+esc(T2.prev)+'</span><span class="nav-arrow" aria-hidden="true">←</span></button>'+
      '<span>'+esc(fmt(T2.pos,{i:i+1,n:L.length}))+'</span>'+
-     '<button id="nx" '+(i===L.length-1?'disabled':'')+'>'+esc(T2.next)+'</button></div>';
+     '<button class="nav-next" id="nx" '+(i===L.length-1?'disabled':'')+'><span>'+esc(T2.next)+'</span><span class="nav-arrow" aria-hidden="true">→</span></button></div>';
   card.classList.remove('swap'); void card.offsetWidth; card.classList.add('swap'); card.scrollTop=0;
   playComic();
   document.getElementById('x').onclick=close;
