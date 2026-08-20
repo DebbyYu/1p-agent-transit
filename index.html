@@ -38,6 +38,20 @@
   .cvtext{position:absolute; left:5.5%; top:43.2%; transform:translateY(-50%);
     width:50%; color:var(--ink)}
   .train .hs-quiet{opacity:.45}
+
+  /* platform screen doors — only revealed once the announcement ends */
+  .gates{position:absolute; left:-2%; right:-2%; bottom:-6%; z-index:4; pointer-events:none;
+    opacity:0; transform:translateY(14%); transition:opacity .4s ease, transform .4s ease}
+  .gates.on{opacity:1; transform:none}
+  .gates svg{display:block; width:100%; height:auto; overflow:visible}
+  /* the narrow layout stacks text under the train, so anchor the doors to the train itself */
+  @media (max-width:680px){
+    .gates{top:0; bottom:auto; padding-top:15.5%}
+  }
+  .psd-d{transition:transform .6s cubic-bezier(.4,0,.2,1)}
+  .psd-d.l{transform:translateX(-105px)}
+  .psd-d.r{transform:translateX(105px)}
+  .gates.shut .psd-d{transform:none}
   .dest{display:inline-flex; align-items:center; gap:8px; background:#1b1f26; color:#eef3f8;
     font-size:11px; letter-spacing:.18em; padding:5px 11px; border-radius:4px; font-weight:700}
   .dest i{width:6px;height:6px;border-radius:50%;background:#ffd77a; box-shadow:0 0 7px #ffd77a}
@@ -48,6 +62,17 @@
   .cvcta{margin-top:26px; font-size:13px; color:var(--ink2); letter-spacing:.06em; text-align:center}
   /* departure */
   #cover.leaving .train{transition:transform 1.05s cubic-bezier(.5,.02,.62,.4); transform:translateX(155vw)}
+  /* on narrow screens the copy sits under the train, so only the carriage pulls away */
+  @media (max-width:680px){
+    #cover.leaving .train{transform:none}
+    #cover.leaving .train > svg{transition:transform 1.05s cubic-bezier(.5,.02,.62,.4);
+      transform:translateX(155vw)}
+    #cover.leaving .cvtext{opacity:0; transition:opacity .3s}
+    /* hover nudges the carriage only — the copy sits outside it here */
+    .train:hover{transform:none}
+    .train > svg{transition:transform .3s cubic-bezier(.2,.8,.3,1)}
+    .train:hover > svg{transform:translateX(8px)}
+  }
   #cover.leaving .cvcta{opacity:0; transition:opacity .3s}
   #cover.leaving .speed{opacity:1}
   .speed{position:absolute; left:0; right:0; top:34%; height:32%; opacity:0; pointer-events:none;
@@ -57,6 +82,12 @@
   .speed i:nth-child(1){top:12%; left:-30%; width:38%; animation-delay:.02s}
   .speed i:nth-child(2){top:42%; left:-46%; width:52%; animation-delay:.12s}
   .speed i:nth-child(3){top:72%; left:-24%; width:30%; animation-delay:.2s}
+  /* percentage margin/padding resolve against the train width, keeping the lines on the carriage */
+  @media (max-width:680px){
+    .speed{top:0; height:0; margin-top:11.6%; padding-top:10.9%}
+    .speed i{height:2px; background:linear-gradient(90deg,transparent,#c5cedb)}
+    .speed i:nth-child(3){display:none}
+  }
   @keyframes whoosh{from{transform:translateX(0)}to{transform:translateX(180%)}}
   .lang-float{position:fixed; top:18px; right:20px; z-index:70}
   #cover.gone .lang-float{display:none}
@@ -752,6 +783,61 @@
       <p class="cvs" id="cvs"></p>
     </div>
     <div class="speed"><i></i><i></i><i></i></div>
+  </div>
+  <div class="gates" id="gates">
+    <svg viewBox="0 0 1100 190" aria-hidden="true">
+      <defs>
+        <linearGradient id="gtGlass" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#dbe6f2" stop-opacity=".88"/>
+          <stop offset=".55" stop-color="#f2f7fc" stop-opacity=".72"/>
+          <stop offset="1" stop-color="#d5e0ec" stop-opacity=".9"/>
+        </linearGradient>
+        <linearGradient id="gtBody" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#dfe7f0"/>
+        </linearGradient>
+      </defs>
+
+      <!-- sliding leaves, drawn first so they tuck behind the fixed panels -->
+      <g class="psd-doors" fill="url(#gtGlass)" stroke="#9fb0c2" stroke-width="2">
+        <g class="psd-d l"><rect x="130" y="60" width="105" height="108" rx="3"/></g>
+        <g class="psd-d r"><rect x="235" y="60" width="105" height="108" rx="3"/></g>
+        <g class="psd-d l"><rect x="445" y="60" width="105" height="108" rx="3"/></g>
+        <g class="psd-d r"><rect x="550" y="60" width="105" height="108" rx="3"/></g>
+        <g class="psd-d l"><rect x="760" y="60" width="105" height="108" rx="3"/></g>
+        <g class="psd-d r"><rect x="865" y="60" width="105" height="108" rx="3"/></g>
+      </g>
+
+      <!-- fixed glass panels -->
+      <g fill="url(#gtGlass)" stroke="#9fb0c2" stroke-width="2">
+        <rect x="-10" y="60" width="140" height="108" rx="3"/>
+        <rect x="340" y="60" width="105" height="108" rx="3"/>
+        <rect x="655" y="60" width="105" height="108" rx="3"/>
+        <rect x="970" y="60" width="140" height="108" rx="3"/>
+      </g>
+
+      <!-- handrail along the fixed panels -->
+      <g fill="url(#gtBody)" stroke="#aeb9c6" stroke-width="1.6">
+        <rect x="-10" y="52" width="140" height="12" rx="6"/>
+        <rect x="340" y="52" width="105" height="12" rx="6"/>
+        <rect x="655" y="52" width="105" height="12" rx="6"/>
+        <rect x="970" y="52" width="140" height="12" rx="6"/>
+      </g>
+
+      <!-- door-frame posts -->
+      <g fill="url(#gtBody)" stroke="#a7b3c1" stroke-width="1.8">
+        <rect x="124" y="48" width="12" height="124" rx="4"/>
+        <rect x="334" y="48" width="12" height="124" rx="4"/>
+        <rect x="439" y="48" width="12" height="124" rx="4"/>
+        <rect x="649" y="48" width="12" height="124" rx="4"/>
+        <rect x="754" y="48" width="12" height="124" rx="4"/>
+        <rect x="964" y="48" width="12" height="124" rx="4"/>
+      </g>
+
+      <!-- platform floor -->
+      <rect x="-10" y="168" width="1120" height="7" fill="#cdd6e0"/>
+      <rect x="-10" y="175" width="1120" height="9" fill="#dfe5ec"/>
+      <rect x="-10" y="184" width="1120" height="6" fill="#eef2f6"/>
+    </svg>
   </div>
   </div>
   <div class="cvcta" id="cta"></div>
@@ -1692,6 +1778,7 @@ function apply(){var T2=t();
   if(guide.classList.contains('open'))renderGuide();
   if(onboard.classList.contains('on'))renderOnboard()}
 var cover=document.getElementById('cover'),app=document.getElementById('app'),inside=false;
+var gates=document.getElementById('gates');
 var departing=false;
 function enter(){
   if(inside||departing) return;
@@ -1704,11 +1791,14 @@ function depart(){
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if(reduce){ toMap(); return }
   departing=true;
-  cover.classList.add('leaving');
-  setTimeout(toMap, 900);
+  gates.classList.add('on');                                        /* doors appear, still open */
+  setTimeout(function(){ gates.classList.add('shut') }, 420);       /* then they close */
+  setTimeout(function(){ cover.classList.add('leaving') }, 1180);   /* and the train pulls away */
+  setTimeout(toMap, 2080);
 }
 function leave(){if(!inside)return;skipGuide=false;hideOnboard();if(ov.classList.contains('open'))close();inside=false;hideBrief();departing=false;
   cover.classList.remove('gone');app.classList.remove('in');document.body.classList.add('locked');
+  gates.classList.remove('on','shut');
   setTimeout(function(){ cover.classList.remove('leaving') }, 30);
   window.scrollTo(0,0)}
 document.getElementById('enter').onclick=enter;
