@@ -369,13 +369,14 @@
     .pr .cp{align-self:flex-start}
     .x{top:11px; right:12px}
     header{padding:0}
-    .hin{display:grid; grid-template-columns:minmax(0,1fr) auto auto;
-      grid-template-areas:"brand lang back" "search search search"; padding:11px 14px; gap:9px 10px}
-    .brand{grid-area:brand; min-width:0}
-    .brand span{display:inline; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
-    .sw{grid-area:search; min-width:0}
-    header .seg{grid-area:lang; justify-self:end}
-    header .back{grid-area:back; justify-self:end; white-space:nowrap}
+    .hin{padding:11px 14px; gap:9px 10px; align-items:center}
+    /* flex rows instead of grid, so the back button's width never squeezes row 2 */
+    .hin::after{content:''; order:2; flex-basis:100%; height:0}
+    .brand{order:1; flex:1 1 0; min-width:0}
+    .brand #bName{min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+    header .back{order:1; flex:none; white-space:nowrap}
+    .sw{order:3; flex:1 1 0; min-width:0}
+    header .seg{order:4; flex:none}
     header .seg button{padding:6px 10px}
     main{padding:16px 14px 50px}
     .key{gap:8px}
