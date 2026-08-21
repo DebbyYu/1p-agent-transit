@@ -714,7 +714,7 @@
   <div class="train" id="enter" role="button" tabindex="0">
     <svg viewBox="0 0 1100 375" role="img" aria-label="Metro train">
       <defs>
-        <clipPath id="hsClip"><path d="M24 24 H952 C1004 24 1042 42 1056 74 C1066 96 1070 128 1070 158 V236 C1070 266 1046 290 1010 296 C994 299 974 300 952 300 H24 C13 300 6 292 6 281 V43 C6 32 13 24 24 24 Z"/></clipPath>
+        <clipPath id="hsClip"><path d="M24 24 H830 C990 24 1076 120 1076 230 C1076 276 1040 300 980 300 H24 C13 300 6 292 6 281 V43 C6 32 13 24 24 24 Z"/></clipPath>
         <linearGradient id="hsShell" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stop-color="#ffffff"/><stop offset=".55" stop-color="#ffffff"/>
           <stop offset=".85" stop-color="#f7fafc"/><stop offset="1" stop-color="#eef3f7"/>
@@ -728,7 +728,7 @@
       <ellipse cx="530" cy="344" rx="510" ry="12" fill="#5a6675" opacity=".10"/>
 
       <!-- car body -->
-      <path d="M24 24 H952 C1004 24 1042 42 1056 74 C1066 96 1070 128 1070 158 V236 C1070 266 1046 290 1010 296 C994 299 974 300 952 300 H24 C13 300 6 292 6 281 V43 C6 32 13 24 24 24 Z" fill="url(#hsShell)"/>
+      <path d="M24 24 H830 C990 24 1076 120 1076 230 C1076 276 1040 300 980 300 H24 C13 300 6 292 6 281 V43 C6 32 13 24 24 24 Z" fill="url(#hsShell)"/>
 
       <g clip-path="url(#hsClip)">
         <!-- roof equipment -->
@@ -739,14 +739,14 @@
         </g>
 
         <!-- destination sign -->
-        <rect x="880" y="58" width="150" height="26" rx="6" fill="#f2f6fa" stroke="#d3dce5" stroke-width="2"/>
-        <image href="Microsoft-logo_rgb_c-gray.png" x="901.7" y="47.1"
+        <rect x="800" y="58" width="150" height="26" rx="6" fill="#f2f6fa" stroke="#d3dce5" stroke-width="2"/>
+        <image href="Microsoft-logo_rgb_c-gray.png" x="821.7" y="47.1"
                width="106.7" height="47.8"/>
 
-        <!-- cab window -->
-        <rect x="884" y="104" width="150" height="104" rx="14" fill="url(#hsWin)"
-              stroke="#c3cede" stroke-width="2.5"/>
-        <path d="M896 200 L960 112 h20 L916 200 Z" fill="#ffffff" opacity=".6"/>
+        <!-- windscreen runs past the nose and is trimmed by hsClip, so the glass sits flush with the body outline -->
+        <path d="M890 196 V116 Q890 100 906 100 H1100 V212 H906 Q890 212 890 196 Z"
+              fill="url(#hsWin)" stroke="#c3cede" stroke-width="2.5"/>
+        <path d="M900 202 L968 110 h22 L922 202 Z" fill="#ffffff" opacity=".6"/>
 
         <!-- passenger windows -->
         <g fill="url(#hsWin)" stroke="#ccd6e1" stroke-width="2">
@@ -788,17 +788,17 @@
         <!-- car number + headlights -->
         <text x="60" y="288" font-family="Segoe UI, sans-serif" font-size="15"
               font-weight="700" fill="#b6c1ce" letter-spacing="3">1P-101</text>
+        <!-- one lamp only: from the side the far headlight would be hidden -->
         <g fill="#ffffff" stroke="#c9d3de" stroke-width="2.4">
-          <rect x="912" y="250" width="48" height="20" rx="10"/>
-          <rect x="974" y="250" width="48" height="20" rx="10"/>
+          <rect x="996" y="242" width="60" height="24" rx="12"/>
         </g>
 
         <!-- skirt -->
-        <path d="M0 292 H1070 V320 H0 Z" fill="#f2f5f8"/>
-        <path d="M6 292 H1064" stroke="#d3dbe4" stroke-width="2" fill="none"/>
+        <path d="M0 292 H1100 V320 H0 Z" fill="#f2f5f8"/>
+        <path d="M6 292 H1094" stroke="#d3dbe4" stroke-width="2" fill="none"/>
       </g>
 
-      <path d="M24 24 H952 C1004 24 1042 42 1056 74 C1066 96 1070 128 1070 158 V236 C1070 266 1046 290 1010 296 C994 299 974 300 952 300 H24 C13 300 6 292 6 281 V43 C6 32 13 24 24 24 Z" fill="none" stroke="#cfd9e3" stroke-width="2.5"/>
+      <path d="M24 24 H830 C990 24 1076 120 1076 230 C1076 276 1040 300 980 300 H24 C13 300 6 292 6 281 V43 C6 32 13 24 24 24 Z" fill="none" stroke="#cfd9e3" stroke-width="2.5"/>
 
       <!-- bogies -->
       <g>
