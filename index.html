@@ -104,7 +104,10 @@
     border-bottom:1px solid var(--line); padding:13px 22px}
   .hin{max-width:1320px; margin:0 auto; display:flex; align-items:center; gap:14px; flex-wrap:wrap}
   .brand{display:flex; align-items:center; gap:10px; font-size:15px; font-weight:700}
-  .brand img{height:21px}
+  /* the artwork carries ~15% side and ~30% top/bottom transparent padding, so it is scaled up
+     and cropped back; the height is set so the wordmark reads at the same size as the title */
+  .brand img{content:url('Copilot-logo-horiz-c-gray-rgb 1.png'); height:46.5px; width:auto;
+    clip-path:inset(33.27% 14.78% 29.48% 14.7%); margin:-15.5px -15.7px -13.7px -15.6px}
   .sep{width:1px; height:18px; background:var(--line)}
   .sw{flex:1; min-width:190px; position:relative}
   #q{width:100%; padding:9px 12px 9px 34px; border:1px solid var(--line); border-radius:7px; background:#fff;
@@ -211,6 +214,9 @@
   .mapwrap.empty svg.map,.mapwrap.empty .vmap{display:none}
 
   footer{max-width:1320px; margin:0 auto; padding:24px 22px 96px; color:var(--ink2); font-size:12.4px; line-height:1.85}
+  /* ~15% side and ~33% top/bottom of this file is transparent padding, cropped so the mark sits flush */
+  .msmark{display:block; height:53.8px; width:auto;
+    clip-path:inset(33.22% 14.99% 33.33% 14.89%); margin:-17.9px -18px -6px -17.9px}
   footer .footh{display:block; font-weight:700; color:var(--ink); margin-bottom:4px}
 
   .ov{position:fixed; inset:0; z-index:50; display:none; align-items:center; justify-content:center;
@@ -705,7 +711,7 @@
   <div class="lang-float"><div class="seg" id="lang0"><button data-lang="zh" class="on">中文</button><button data-lang="en">EN</button></div></div>
   <div class="stage">
   <div class="rails"><i></i><i></i></div>
-  <div class="train" id="enter">
+  <div class="train" id="enter" role="button" tabindex="0">
     <svg viewBox="0 0 1100 375" role="img" aria-label="Metro train">
       <defs>
         <clipPath id="hsClip"><path d="M24 24 H952 C1004 24 1042 42 1056 74 C1066 96 1070 128 1070 158 V236 C1070 266 1046 290 1010 296 C994 299 974 300 952 300 H24 C13 300 6 292 6 281 V43 C6 32 13 24 24 24 Z"/></clipPath>
@@ -734,8 +740,8 @@
 
         <!-- destination sign -->
         <rect x="880" y="58" width="150" height="26" rx="6" fill="#f2f6fa" stroke="#d3dce5" stroke-width="2"/>
-        <text x="955" y="77" text-anchor="middle" font-family="Segoe UI, sans-serif"
-              font-size="14" font-weight="700" fill="#9aa7b6" letter-spacing="2">1P LINE</text>
+        <image href="Microsoft-logo_rgb_c-gray.png" x="901.7" y="47.1"
+               width="106.7" height="47.8"/>
 
         <!-- cab window -->
         <rect x="884" y="104" width="150" height="104" rx="14" fill="url(#hsWin)"
@@ -754,6 +760,10 @@
         <g fill="#ffffff" opacity=".55">
           <path d="M724 200 L780 112 h22 L746 200 Z"/>
         </g>
+
+        <!-- livery, centred under the window; the file's box is ~18%/24% transparent padding -->
+        <image href="Copilot-logo-cent-c-gray-rgb%202.png" x="696.3" y="185.6"
+               width="159.5" height="118"/>
 
         <!-- sliding doors -->
         <g fill="none" stroke="#cfd8e2" stroke-width="2.4">
@@ -984,7 +994,7 @@
     <div class="mapwrap"><svg class="map" id="map" viewBox="0 0 1230 430" preserveAspectRatio="xMidYMin meet"></svg><div class="vmap" id="vmap"></div><div class="nores" id="nores" hidden></div></div>
     <div class="mkey" id="mkey"></div>
   </main>
-  <footer><b class="footh" id="footh"></b><span id="foot"></span></footer>
+  <footer><img class="msmark" src="Microsoft-logo_rgb_c-gray.png" alt="Microsoft"><b class="footh" id="footh"></b><span id="foot"></span></footer>
   <button type="button" class="totop" id="toTop" hidden></button>
 </div>
 
@@ -1095,7 +1105,7 @@ var T={
   cpLinkLbl:"複製連結", cpLinkDone:"已複製連結", linkCopied:"已複製連結，貼到瀏覽器分頁即可開啟",
   cvt:'AI 代理程式路網圖', cvs:'搭乘 1P Agent 捷運，探索由 Microsoft 打造的 20 個 AI 代理程式（Agent）。', cvsScene:'請隨時留意月台廣播。',
   obClose:'關閉站內廣播', obOpen:'站內廣播',
-  cta:'點選列車，查看路網圖 →', dest:'1P AGENT 捷運 ・ 全線', brand:'AI 代理程式路網圖', back:'← 返回月台',
+  cta:'點選列車或畫面任一處，查看路網圖 →', dest:'1P AGENT 捷運 ・ 全線', brand:'AI 代理程式路網圖', back:'← 返回月台',
   h1:'由 Microsoft 打造的 AI 代理程式',
   lede:'每一站為一個代理程式（Agent）。點選任一站點了解其說明與範例提示，按「前往 Agent」查看乘車注意事項後即可出發。',
   replayHint:'如需再次查看搭乘指南，請點選大聲公圖示。',
@@ -1135,7 +1145,7 @@ var T={
   cpLinkLbl:"Copy link", cpLinkDone:"Link copied", linkCopied:"Link copied — paste it into a browser tab",
   cvt:'1P Agent Transit Map', cvs:'Agents built by Microsoft, grouped into four lines by what they are for. See the whole network at a glance, then select a station to board.', cvsScene:'',
   obClose:'Close announcement', obOpen:'Announcement',
-  cta:'Select the train to open the map →', dest:'1P AGENT METRO ・ ALL LINES', brand:'1P Agent Transit Map', back:'← Back to platform',
+  cta:'Select the train — or anywhere — to open the map →', dest:'1P AGENT METRO ・ ALL LINES', brand:'1P Agent Transit Map', back:'← Back to platform',
   h1:'Agents built by Microsoft',
   lede:'Each station is one agent. Select a station for details and prompts, then review the transfer announcement before departure.',
   replayHint:'To review the boarding guide, select the megaphone icon.',
@@ -1873,6 +1883,11 @@ function leave(){if(!inside)return;skipGuide=false;hideOnboard();if(ov.classList
   setTimeout(function(){ cover.classList.remove('leaving') }, 30);
   window.scrollTo(0,0)}
 document.getElementById('enter').onclick=enter;
+document.getElementById('enter').addEventListener('keydown',function(e){
+  if(e.key==='Enter'||e.key===' '){e.preventDefault();enter()}
+});
+/* the hint line reads as tappable, so the whole platform accepts the tap — not just the train */
+cover.addEventListener('click',function(){if(!brief.classList.contains('on'))enter()});
 document.getElementById('back').onclick=leave;
 document.getElementById('obOpen').onclick=function(){ showOnboard() };
 window.addEventListener('resize',function(){
