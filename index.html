@@ -792,9 +792,13 @@
     filter:drop-shadow(0 6px 12px rgba(20,40,60,.18))}
   #onboard.crew .spk-mega{display:none}
   #onboard.crew .spk-crew{display:block}
-  #onboard.walking{background:transparent; backdrop-filter:none}
-  #onboard.walking .pa{left:auto; right:clamp(14px,3vw,40px); width:min(500px,calc(100vw - 28px));
-    max-width:none; align-items:flex-end; gap:10px}
+  #onboard.walking{background:transparent; backdrop-filter:none; overflow:hidden}
+  /* fixed, so the tops and lefts worked out in viewport pixels land where they are meant to
+     even when the panel's container can scroll (iOS Safari) */
+  #onboard.walking .pa{position:fixed; left:auto; right:clamp(14px,3vw,40px);
+    width:min(500px,calc(100vw - 28px));
+    max-width:none; align-items:flex-end; justify-content:flex-end; gap:10px; transform:none}
+  #onboard.walking.side-left .pa{justify-content:flex-start}
   /* one message dissolves into the next while the conductor stands still */
   #onboard.walking .obstage{overflow:hidden; transition:height .34s cubic-bezier(.3,.85,.3,1)}
   #onboard.walking .obrow,#onboard.walking .obrow.out{transform:none;
@@ -888,7 +892,7 @@
   @media (max-width:680px){
     #crewFab{right:12px; bottom:12px; width:56px; height:90px}
     #crewFab .crew-tip{display:none}
-    #onboard.walking .pa{left:10px; right:10px; width:auto; gap:5px}
+    #onboard.walking .pa{left:10px; right:10px; width:auto; gap:5px; transform:none}
     #onboard.walking .pa-spk{display:block; width:56px; height:90px}
     #onboard.walking .pa-bub{width:auto; padding:13px 15px 11px; border-radius:22px}
   }
@@ -2066,6 +2070,10 @@ function spotBox(el){
 /* Everything below is measured from the conductor himself, not the panel, so folding
    the bubble away or unfolding it on his other side never shifts where he stands. */
 var walkSide='right', walkBoxH=150;
+/* iOS Safari reports a visual viewport that differs from innerWidth/innerHeight
+   while its toolbars are on screen */
+function viewW(){ return (window.visualViewport&&visualViewport.width)||innerWidth }
+function viewH(){ return (window.visualViewport&&visualViewport.height)||innerHeight }
 function walkFig(){ return onboard.querySelector('.pa-spk').getBoundingClientRect() }
 function walkPlace(px,py,instant){
   var pa=onboard.querySelector('.pa'), pb=pa.getBoundingClientRect(), sb=walkFig();
@@ -2078,21 +2086,22 @@ function walkPlace(px,py,instant){
 function walkTarget(sel){
   var r=spotFind(sel); if(!r) return null;
   var fig=walkFig(), fw=fig.width||74, fh=fig.height||118;
-  var m=Math.min(28,innerWidth*0.03), wide=innerWidth>680;
-  var pw=Math.min(500,innerWidth-28), h=Math.max(fh,walkBoxH);
+  var vw=viewW(), vh=viewH();
+  var m=Math.min(28,vw*0.03), wide=vw>680;
+  var pw=Math.min(500,vw-28), h=Math.max(fh,walkBoxH);
   var box={top:r.top-17,bottom:r.top+r.height+17,left:r.left-17,right:r.left+r.width+17};
   var side='right';
   if(wide){
-    var gapR=innerWidth-box.right, gapL=box.left;
+    var gapR=vw-box.right, gapL=box.left;
     side=(gapR>=pw+m)?'right':((gapL>=pw+m)?'left':(gapR>=gapL?'right':'left'));
   }
-  var px=wide?(side==='left'?m:innerWidth-m-fw):null;
-  var py=Math.min(Math.max(12,(box.top+box.bottom)/2-fh/2),Math.max(12,innerHeight-fh-12));
+  var px=wide?(side==='left'?m:vw-m-fw):null;
+  var py=Math.min(Math.max(12,(box.top+box.bottom)/2-fh/2),Math.max(12,vh-fh-12));
   var l=px==null?0:(side==='left'?px:px+fw-pw), rEdge=l+pw;
   var pTop=py+fh-h;
   if((px==null||(rEdge>box.left&&l<box.right))&&pTop<box.bottom&&py+fh>box.top){
     if(box.top-14-fh>=12) py=box.top-14-fh;
-    else if(box.bottom+14+fh<=innerHeight-12) py=box.bottom+14;
+    else if(box.bottom+14+fh<=vh-12) py=box.bottom+14;
   }
   return {px:px,py:py,side:side};
 }
@@ -2419,9 +2428,9 @@ function walkWait(sel,cb){          /* a step can only start once its control ex
 function walkPark(instant){
   if(!onboard.classList.contains('walking')) return;
   var fig=walkFig(), fw=fig.width||74, fh=fig.height||118;
-  var m=Math.min(28,innerWidth*0.03);
-  walkPlace(innerWidth>680?innerWidth-m-fw:null,
-    Math.max(12,innerHeight-fh-Math.min(28,innerHeight*0.03)),instant);
+  var vw=viewW(), vh=viewH(), m=Math.min(28,vw*0.03);
+  walkPlace(vw>680?vw-m-fw:null,
+    Math.max(12,vh-fh-Math.min(28,vh*0.03)),instant);
 }
 function startWalk(){
   var T2=t(), ws=T2.walk||[];
@@ -2461,7 +2470,8 @@ function startWalk(){
     var park=firstPark; firstPark=false;
     tryOff();
     Array.prototype.forEach.call(lines,typeStop);   /* the bubble is sized from the whole line */
-    stage.style.height=rows[i].scrollHeight+'px';    /* measured while it is still unfolded */
+    var say=rows[i].querySelector('p');             /* the row is stretched by the grid, the text is not */
+    stage.style.height=Math.ceil(say.getBoundingClientRect().height)+'px';
     var fig=walkFig(), stood=park?null:{x:fig.left,y:fig.top};
     spotOff();
     onboard.classList.add('observing');
@@ -3050,6 +3060,12 @@ window.addEventListener('resize',function(){
     var t=spotSel&&walkTarget(spotSel);
     if(t){ walkFace(t.side); walkPlace(t.px,t.py,true) } else walkPark(true);
   }
+});
+/* the iOS toolbars slide away without firing a window resize */
+if(window.visualViewport) visualViewport.addEventListener('resize',function(){
+  if(!onboard.classList.contains('walking')) return;
+  var t=spotSel&&walkTarget(spotSel);
+  if(t){ walkFace(t.side); walkPlace(t.px,t.py,true) } else walkPark(true);
 });
 window.addEventListener('scroll',function(){ if(spotSel)spotPlace() },{passive:true});
 document.getElementById('q').addEventListener('input',function(e){
