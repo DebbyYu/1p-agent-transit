@@ -2865,25 +2865,35 @@ function playComic(){
     if(again) again.onclick=function(){ reset() };
     bindCopy(body);
   }
+  /* the card is what scrolls, and scrollIntoView is unreliable inside it on iOS, so the
+     newest message is brought to the top of the card by hand */
+  function chatTo(sel){
+    var all=body.querySelectorAll(sel), el=all[all.length-1]||body.lastElementChild;
+    if(!el) return;
+    var max=Math.max(0,card.scrollHeight-card.clientHeight);
+    var to=card.scrollTop+(el.getBoundingClientRect().top-card.getBoundingClientRect().top)-12;
+    card.scrollTop=Math.max(0,Math.min(to,max));
+  }
   /* one tap plays the whole exchange: the reply, then the follow-up asked and answered */
   function run(i){
     var rep=(REPLY[a.id]||[])[i]; if(!rep) return;
     var r=rep[st.lang]||rep.zh, one=said(d.prompts[i]);
     body.innerHTML=one+typing();
+    chatTo('.ch-you');
     chatT.push(setTimeout(function(){
       one+=answer(r.lead,replyBody({k:rep.k, b:r.b}),r.note);
       var fu=(FOLLOW[a.id]||[])[i], f=fu&&(fu[st.lang]||fu.zh);
-      if(!f){ body.innerHTML=one+foot(i); bindEnd(); return }
+      if(!f){ body.innerHTML=one+foot(i); bindEnd(); chatTo('.ch-reply'); return }
       body.innerHTML=one;
-      body.lastElementChild.scrollIntoView({block:'nearest'});
+      chatTo('.ch-reply');
       chatT.push(setTimeout(function(){
         var two=one+said(f.q);
         body.innerHTML=two+typing();
-        body.lastElementChild.scrollIntoView({block:'nearest'});
+        chatTo('.ch-you');
         chatT.push(setTimeout(function(){
           body.innerHTML=two+answer(f.lead,replyBody({k:fu.k, b:f.b}),'')+foot(i);
           bindEnd();
-          body.lastElementChild.scrollIntoView({block:'nearest'});
+          chatTo('.ch-reply');
         }, 800));
       }, 1100));
     }, 900));
