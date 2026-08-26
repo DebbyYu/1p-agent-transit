@@ -2865,6 +2865,7 @@ function playComic(){
     if(again) again.onclick=function(){ reset() };
     bindCopy(body);
   }
+  /* one tap plays the whole exchange: the reply, then the follow-up asked and answered */
   function run(i){
     var rep=(REPLY[a.id]||[])[i]; if(!rep) return;
     var r=rep[st.lang]||rep.zh, one=said(d.prompts[i]);
@@ -2873,20 +2874,18 @@ function playComic(){
       one+=answer(r.lead,replyBody({k:rep.k, b:r.b}),r.note);
       var fu=(FOLLOW[a.id]||[])[i], f=fu&&(fu[st.lang]||fu.zh);
       if(!f){ body.innerHTML=one+foot(i); bindEnd(); return }
-      body.innerHTML=one+
-        '<button class="ch-more"><span class="ch-q">'+esc(f.q)+'</span>'+
-        '<span class="ch-go" style="color:'+col+'">'+esc(T2.chatMore)+'</span></button>'+
-        foot(i);
-      bindEnd();
-      body.querySelector('.ch-more').onclick=function(){
+      body.innerHTML=one;
+      body.lastElementChild.scrollIntoView({block:'nearest'});
+      chatT.push(setTimeout(function(){
         var two=one+said(f.q);
         body.innerHTML=two+typing();
         body.lastElementChild.scrollIntoView({block:'nearest'});
         chatT.push(setTimeout(function(){
           body.innerHTML=two+answer(f.lead,replyBody({k:fu.k, b:f.b}),'')+foot(i);
           bindEnd();
+          body.lastElementChild.scrollIntoView({block:'nearest'});
         }, 800));
-      };
+      }, 1100));
     }, 900));
   }
   function reset(){
