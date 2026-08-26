@@ -2090,10 +2090,15 @@ function walkTarget(sel){
   var m=Math.min(28,vw*0.03), wide=vw>680;
   var pw=Math.min(500,vw-28), h=Math.max(fh,walkBoxH);
   var box={top:r.top-17,bottom:r.top+r.height+17,left:r.left-17,right:r.left+r.width+17};
-  var side='right';
+  var side=wide?'right':walkSide;
   if(wide){
     var gapR=vw-box.right, gapL=box.left;
     side=(gapR>=pw+m)?'right':((gapL>=pw+m)?'left':(gapR>=gapL?'right':'left'));
+  }else{
+    /* the panel spans the phone, so he just stands at the end nearer what he points at,
+       and keeps his side when the control is centred rather than flip-flopping */
+    var c=(box.left+box.right)/2;
+    if(c<vw*0.4) side='left'; else if(c>vw*0.6) side='right';
   }
   var px=wide?(side==='left'?m:vw-m-fw):null;
   var py=Math.min(Math.max(12,(box.top+box.bottom)/2-fh/2),Math.max(12,vh-fh-12));
