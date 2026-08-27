@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="format-detection" content="telephone=no,date=no,address=no,email=no">
-<title>1st Party Agent 捷運路網圖 · Microsoft 365 Copilot</title>
+<title>Pre-built Agent 捷運路網圖 · Microsoft 365 Copilot</title>
 <style>
   :root{
     --bg:#f2f4f7; --panel:#fff; --ink:#15181d; --ink2:#616b78; --line:#dfe3e9;
@@ -1000,7 +1000,7 @@
 
         <!-- car number + headlights -->
         <text x="60" y="288" font-family="Segoe UI, sans-serif" font-size="15"
-              font-weight="700" fill="#b6c1ce" letter-spacing="3">1P-101</text>
+              font-weight="700" fill="#b6c1ce" letter-spacing="3">PB-021</text>
         <!-- one lamp only: from the side the far headlight would be hidden -->
         <g fill="#ffffff" stroke="#c9d3de" stroke-width="2.4">
           <rect x="996" y="242" width="60" height="24" rx="12"/>
@@ -1032,7 +1032,7 @@
       </g>
     </svg>
     <div class="cvtext">
-      <span class="dest"><i></i><span id="destTxt">1P AGENT NETWORK</span></span>
+      <span class="dest"><i></i><span id="destTxt">PB AGENT NETWORK</span></span>
       <div class="cvt" id="cvt"></div>
       <p class="cvs" id="cvs"></p>
     </div>
@@ -1471,9 +1471,9 @@ var T={
   guideAddH:'首次使用：先新增代理程式', guideAddP:'若出現代理程式詳細資料，請先按圈選的「新增代理程式」，新增後即可開始使用。',
   guideBack:'← 上一步', guideNext:'下一步 →', guideGo:'前往 Agent →', guideClose:'關閉乘車注意事項', guideSkip:'本次行程不再顯示乘車注意事項', briefNext:'下一則 →',
   cpLinkLbl:"複製連結", cpLinkDone:"已複製連結", linkCopied:"已複製連結，貼到瀏覽器分頁即可開啟",
-  cvt:'1st Party Agent 捷運路網圖', cvs:'搭乘 1P Agent 捷運，探索由 Microsoft 打造的 21 個 AI 代理程式（Agent）。', cvsScene:'請隨時留意月台廣播。',
+  cvt:'Pre-built Agent 捷運路網圖', cvs:'搭乘 PB Agent 捷運，探索由 Microsoft 打造的 21 個 AI 代理程式（Agent）。', cvsScene:'請隨時留意月台廣播。',
   obClose:'關閉站內廣播', obOpen:'站內廣播',
-  cta:'點選列車或畫面任一處，查看路網圖 →', dest:'1P AGENT 捷運 ・ 全線', brand:'1P Agent 捷運路網圖', back:'← 返回月台',
+  cta:'點選列車或畫面任一處，查看路網圖 →', dest:'PB AGENT 捷運 ・ 全線', brand:'Pre-built Agent 捷運路網圖', back:'← 返回月台',
   h1:'由 Microsoft 打造的 AI 代理程式',
   lede:'每一站為一個代理程式（Agent）。點選任一站點了解其說明與範例提示，按「前往 Agent」查看乘車注意事項後即可出發。',
   replayHint:'如需再次查看搭乘指南，請點選大聲公圖示。',
@@ -1498,7 +1498,7 @@ var T={
   suggLead:'不只能搜名稱，也可以搜用途：',
   briefSkip:'略過，直接前往路網圖', toTop:'↑ 回到頂部',
   /* [編號, 標題, 內文, 圖示, 要打亮的真實元件, 單獨顯示的路線, 收尾引導] */
-  notes:[['','歡迎搭乘 1P Agent 捷運','這張路網圖把 21 個由 Microsoft 打造的 AI 代理程式，按用途排成四條路線。接下來用五個步驟，帶你看懂怎麼看、怎麼找、怎麼上車。','tour',null],
+  notes:[['','歡迎搭乘 PB Agent 捷運','這張路網圖把 21 個由 Microsoft 打造的 AI 代理程式，按用途排成四條路線。接下來用五個步驟，帶你看懂怎麼看、怎麼找、怎麼上車。','tour',null],
          ['01','怎麼搭乘',['點任一站，可以先**模擬試乘**，看看它會回什麼。',
                         '按「前往 Agent」就能直接開啟。',
                         '第一次使用時，按一下「新增代理程式」即可。'],'board','#map .stop, #vmap .vst'],
@@ -1536,9 +1536,9 @@ var T={
   guideAddH:'First visit: add the agent', guideAddP:'If the agent details appear, select the highlighted Add button first. The agent will then be ready to use.',
   guideBack:'← Previous step', guideNext:'Next step →', guideGo:'Go to the agent →', guideClose:'Close boarding information', guideSkip:'Do not show passenger information again during this journey', briefNext:'Next →',
   cpLinkLbl:"Copy link", cpLinkDone:"Link copied", linkCopied:"Link copied — paste it into a browser tab",
-  cvt:'1P Agent Transit Map', cvs:'Agents built by Microsoft, grouped into four lines by what they are for. See the whole network at a glance, then select a station to board.', cvsScene:'',
+  cvt:'Pre-built Agent Transit Map', cvs:'Agents built by Microsoft, grouped into four lines by what they are for. See the whole network at a glance, then select a station to board.', cvsScene:'',
   obClose:'Close announcement', obOpen:'Announcement',
-  cta:'Select the train — or anywhere — to open the map →', dest:'1P AGENT METRO ・ ALL LINES', brand:'1P Agent Transit Map', back:'← Back to platform',
+  cta:'Select the train — or anywhere — to open the map →', dest:'PB AGENT METRO ・ ALL LINES', brand:'Pre-built Agent Transit Map', back:'← Back to platform',
   h1:'Agents built by Microsoft',
   lede:'Each station is one agent. Select a station for details and prompts, then review the transfer announcement before departure.',
   replayHint:'To review the boarding guide, select the megaphone icon.',
@@ -1819,7 +1819,7 @@ function open(id){var L=visible(),i=-1;
 /* ---------------- the conductor's briefing ----------------
    Shown between the departing train and the map: who these agents are, and
    the one idea the map depends on — every station is one agent.        */
-var ANNOUNCE = {"zh": {"kicker": "站內廣播", "sub": "1P AGENT 捷運 ・ 全線", "lines": ["各位旅客您好，歡迎搭乘 1P Agent 捷運。", "本捷運沿線的代理程式（Agent），是 Microsoft 自行打造、內建於 Microsoft 365 Copilot 的 AI 助理 —— 不需自行開發，開啟即可使用。", "本捷運共 <b>20 站、4 條路線，每一個站點即為一個代理程式</b>。", "<b>紅線「新手上路」為免費路線</b>，未持有 Copilot 授權亦可搭乘；其餘三線依用途分為知識與解答、資料與分析、產出與執行。", "抵達各站後，您可先透過<b>模擬對話</b>了解該 Agent 的回覆方式，再一鍵前往 Agent 實際體驗。", "行程期間將播送<b>搭乘指南</b>，請隨時留意站內廣播；如需再次查看，請點選大聲公圖示。", "列車即將發車，請小心月台間隙。"], "go": "發車，前往路網圖 →"}, "en": {"kicker": "Station announcement", "sub": "1P AGENT METRO ・ ALL LINES", "lines": ["Attention passengers: welcome aboard the 1P Agent Metro.", "The agents on this metro are AI assistants Microsoft built into Microsoft 365 Copilot — nothing to develop, just open one and go.", "This metro has <b>20 stations across 4 lines, and every station is one agent</b>.", "<b>The red “Start here” line is free to ride</b> — no Copilot licence required. The other three are grouped into knowledge and answers, data and analysis, and creation and execution.", "On arrival at any station, preview how the agent responds through a <b>simulated conversation</b>, then open the agent to try it for yourself.", "A <b>boarding guide</b> is announced along the way. To review it, select the megaphone icon.", "The train is about to depart. Please mind the gap."], "go": "Depart for the map →"}};
+var ANNOUNCE = {"zh": {"kicker": "站內廣播", "sub": "PB AGENT 捷運 ・ 全線", "lines": ["各位旅客您好，歡迎搭乘 PB Agent 捷運。", "本捷運沿線的代理程式（Agent），是 Microsoft 自行打造、內建於 Microsoft 365 Copilot 的 AI 助理 —— 不需自行開發，開啟即可使用。", "本捷運共 <b>20 站、4 條路線，每一個站點即為一個代理程式</b>。", "<b>紅線「新手上路」為免費路線</b>，未持有 Copilot 授權亦可搭乘；其餘三線依用途分為知識與解答、資料與分析、產出與執行。", "抵達各站後，您可先透過<b>模擬對話</b>了解該 Agent 的回覆方式，再一鍵前往 Agent 實際體驗。", "行程期間將播送<b>搭乘指南</b>，請隨時留意站內廣播；如需再次查看，請點選大聲公圖示。", "列車即將發車，請小心月台間隙。"], "go": "發車，前往路網圖 →"}, "en": {"kicker": "Station announcement", "sub": "PB AGENT METRO ・ ALL LINES", "lines": ["Attention passengers: welcome aboard the PB Agent Metro.", "The agents on this metro are AI assistants Microsoft built into Microsoft 365 Copilot — nothing to develop, just open one and go.", "This metro has <b>20 stations across 4 lines, and every station is one agent</b>.", "<b>The red “Start here” line is free to ride</b> — no Copilot licence required. The other three are grouped into knowledge and answers, data and analysis, and creation and execution.", "On arrival at any station, preview how the agent responds through a <b>simulated conversation</b>, then open the agent to try it for yourself.", "A <b>boarding guide</b> is announced along the way. To review it, select the megaphone icon.", "The train is about to depart. Please mind the gap."], "go": "Depart for the map →"}};
 ANNOUNCE.zh.lines[2]=ANNOUNCE.zh.lines[2].replace('20 站','21 站');
 ANNOUNCE.en.lines[2]=ANNOUNCE.en.lines[2].replace('20 stations','21 stations');
 var brief=document.getElementById('brief');
