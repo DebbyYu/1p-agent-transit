@@ -1561,7 +1561,9 @@ var ROUTE_OVERRIDES={
   "learning-coach":"grow",
   "researcher":"grow",
   "frontline-agent":"free",
-  "sharepoint-list-agent":"insight"
+  "sharepoint-list-agent":"insight",
+  "plan-my-day":"insight",
+  "planner-agent":"insight"
 };
 AGENTS.forEach(function(agent){
   if(ROUTE_OVERRIDES[agent.id]) agent.domain=ROUTE_OVERRIDES[agent.id];
@@ -1832,9 +1834,9 @@ var GEO={
   grow:   { path:[[PAD,LANE.grow],[B1,LANE.grow],[B2,LANE.free],[XEND,LANE.free]],
             stops:[[250,LANE.grow,'down'],[390,LANE.grow,'up'],[525,LANE.grow,'down'],[875,LANE.free,'up'],[1030,LANE.free,'up']] },
   insight:{ path:[[PAD,LANE.insight],[B1,LANE.insight],[B2,LANE.work],[XEND,LANE.work]],
-            stops:[[390,LANE.insight,'up'],[875,LANE.work,'up'],[1050,LANE.work,'down']] },
+            stops:[[400,LANE.insight,'up'],[540,LANE.insight,'down'],[800,LANE.work,'up'],[950,LANE.work,'down'],[1110,LANE.work,'down']] },
   work:   { path:[[PAD,LANE.work],[B1,LANE.work],[B2,LANE.grow],[XEND,LANE.grow]],
-            stops:[[235,LANE.work,'down'],[335,LANE.work,'down'],[435,LANE.work,'up'],[535,LANE.work,'down'],[800,LANE.grow,'down'],[900,LANE.grow,'up'],[1000,LANE.grow,'up'],[1100,LANE.grow,'down']] }
+            stops:[[250,LANE.work,'down'],[390,LANE.work,'up'],[525,LANE.work,'down'],[800,LANE.grow,'up'],[950,LANE.grow,'up'],[1110,LANE.grow,'down']] }
 };
 var LANE_ORDER=["free", "grow", "insight", "work"];
 var LBLW=124;   /* usable width of the reserved label column */
