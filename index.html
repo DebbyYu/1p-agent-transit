@@ -139,7 +139,8 @@
 
   main{max-width:1320px; margin:0 auto; padding:28px 22px 70px}
   h1{font-size:clamp(21px,2.8vw,29px); margin:0 0 9px; font-weight:700; letter-spacing:-.015em}
-  .lede{margin:0 0 22px; color:var(--ink2); font-size:14.4px; line-height:1.85; max-width:82ch}
+  .lede{margin:0 0 22px; color:var(--ink2); font-size:14.4px; line-height:1.85; max-width:82ch;
+    text-wrap:pretty; word-break:keep-all; line-break:strict}
   .key{display:flex; gap:9px; flex-wrap:wrap; align-items:center; margin-bottom:18px}
   .kb{border:1px solid var(--line); background:#fff; border-radius:20px; padding:7px 15px; cursor:pointer;
     font-size:13px; font-weight:600; color:var(--ink2); display:inline-flex; gap:8px; align-items:center}
@@ -199,6 +200,11 @@
     transition:transform .16s ease; transform-origin:center; transform-box:fill-box}
   .stop:hover .lbl{fill:#000; transform:scale(1.22)}
   .stop:hover .sub{transform:scale(1.22)}
+  .stop.lg .lbl{font-size:15px; font-weight:800}
+  .stop.lg .sub{font-size:11.4px}
+  .stop.lg .dot,.stop.lg .ring{transform:scale(1.16)}
+  .stop.sm .lbl{font-size:10.6px}
+  .stop.sm .sub{font-size:8.8px}
   .linelabel{font-family:var(--sans); font-size:13px; font-weight:800; letter-spacing:.03em}
   .linecount{font-family:var(--sans); font-size:10.5px; fill:var(--ink2)}
   .dim{opacity:.14; transition:opacity .22s}
@@ -1608,11 +1614,11 @@ var T={
   guideAddH:'首次使用：先新增代理程式', guideAddP:'若出現代理程式詳細資料，請先按圈選的「新增代理程式」，新增後即可開始使用。',
   guideBack:'← 上一步', guideNext:'下一步 →', guideGo:'前往 Agent →', guideClose:'關閉乘車注意事項', guideSkip:'本次行程不再顯示乘車注意事項', briefNext:'下一則 →',
   cpLinkLbl:"複製連結", cpLinkDone:"已複製連結", linkCopied:"已複製連結，貼到瀏覽器分頁即可開啟",
-  cvt:'Pre-built Agent 捷運路網圖', cvs:'搭乘 PB Agent 捷運，探索由 Microsoft 打造的 AI 代理程式（Agent）。', cvsScene:'請隨時留意月台廣播。',
+  cvt:'Pre-built Agent 捷運路網圖', cvs:'搭乘 PB Agent 捷運，探索由 Microsoft 打造的 AI 代理程式（Agent）', cvsScene:'請隨時留意月台廣播',
   obClose:'關閉站內廣播', obOpen:'站內廣播',
   cta:'點選列車或畫面任一處，查看路網圖 →', dest:'PB AGENT 捷運 ・ 全線', brand:'Pre-built Agent 捷運路網圖', back:'← 返回月台',
   h1:'由 Microsoft 打造的 AI 代理程式',
-  lede:'每一站為一個代理程式（Agent）。點選任一站點了解其說明與範例提示，按「前往 Agent」查看乘車注意事項後即可出發。',
+  lede:'每一站為一個代理程式（Agent）。點選任一站點了解其說明與範例提示，按「前往\u00A0Agent」查看乘車注意事項後即可出發。',
   replayHint:'如需再次查看搭乘指南，請點選大聲公圖示。',
   replayHintMobile:'如需再次查看搭乘指南，請點選「站內廣播」。',
   qph:'搜尋 Agent、用途或關鍵字…',
@@ -1664,7 +1670,7 @@ var T={
   obYes:'好，帶我走一次 →', obNo:'不用，我自己逛',
   walkTitle:'帶你走一次', walkDone:'完成 ✓',
     /* [內部步驟名稱, 對話, 要打亮的元件, 可以點的元件, 非點不可, 開口前先讓人看畫面的毫秒] */
-    walk:[['開啟站點','先點一下這個站！我們一起看看這個 Agent 長什麼樣子。','#map .stop, #vmap .vst','#map .stop, #vmap .vst',true,300],
+    walk:[['開啟站點','先點一下這個站！我們一起看看這個 Agent 長什麼樣子。','#map .stop[data-id="analyst"], #vmap .vst[data-id="analyst"]','#map .stop[data-id="analyst"], #vmap .vst[data-id="analyst"]',true,300],
       ['模擬對話','這裡可以試玩模擬對話！選一個提示，看看它會怎麼回覆。這不是真的 Copilot 對話喔！','#card .ch-opts','#card .ch-opt',true,900],
       ['複製提示','覺得這個提示不錯嗎？複製起來，貼到 Copilot 就能用囉！','#card .cp','#card .cp',false,1100],
       ['前往 Agent','最後按一下「前往 Agent」，就能在你的 Copilot 裡打開它！第一次使用的話，再按一下「新增代理程式」就可以了。','#card .c-act .btn.solid','#card .c-act .btn.solid',false,800]],
@@ -1734,7 +1740,7 @@ var T={
            'Copy a prompt, then open the agent from the card'],
   obYes:'Yes, walk me through →', obNo:'No thanks, I will explore',
   walkTitle:'Walking you through', walkDone:'Done ✓',
-    walk:[['Open station','Give this station a tap! Let us see what this agent looks like.','#map .stop, #vmap .vst','#map .stop, #vmap .vst',true,300],
+    walk:[['Open station','Give this station a tap! Let us see what this agent looks like.','#map .stop[data-id="analyst"], #vmap .vst[data-id="analyst"]','#map .stop[data-id="analyst"], #vmap .vst[data-id="analyst"]',true,300],
       ['Simulated conversation','Try the simulated conversation! Pick a prompt and see how it replies. It is not a real Copilot chat!','#card .ch-opts','#card .ch-opt',true,900],
       ['Copy prompt','Like this prompt? Copy it and paste it straight into Copilot!','#card .cp','#card .cp',false,1100],
       ['Open agent','Finally, select “Open the agent” to open it in your Copilot! First time? Just select “Add agent” and you are good to go.','#card .c-act .btn.solid','#card .c-act .btn.solid',false,800]],
@@ -1824,19 +1830,30 @@ var PAD=210;                     /* reserved label column */
    never sit on top of one another. Stop positions were solved so that no
    two labels touch in Chinese or English, even at hover size.          */
 var LANE={free:55, grow:145, insight:235, work:325};
+/* Labels sit just clear of the largest marker (a scaled-up GA double ring). */
+var LBL_GAP=3;
+/* Emphasis tiers requested by stakeholders; anything unlisted keeps the default size. */
+var STOP_SIZE={
+  "researcher":"lg", "excel-agent":"lg", "analyst":"lg",
+  "word-agent":"lg", "powerpoint-agent":"lg", "workflows-frontier":"lg",
+  "facilitator":"lg", "interpreter":"lg",
+  "ai-learning-advisor":"sm", "learning":"sm", "sme-finder":"sm",
+  "plan-my-day":"sm", "planner-agent":"sm", "sharepoint-list-agent":"sm",
+  "sharepoint-page-agent":"sm"
+};
 var B1=565, B2=755, XEND=1150;
 /* In the crossing zone the four lanes sit 90px apart, so a label pointing down
    from one lane lands on a label pointing up from the next. Only the bottom
    lane may point down there; the rest point up.                            */
 var GEO={
   free:   { path:[[PAD,LANE.free],[B1,LANE.free],[B2,LANE.insight],[XEND,LANE.insight]],
-            stops:[[300,LANE.free,'up'],[500,LANE.free,'up'],[875,LANE.insight,'up'],[1050,LANE.insight,'down']] },
+            stops:[[470,LANE.free,'up'],[290,LANE.free,'up'],[1060,LANE.insight,'up'],[920,LANE.insight,'down']] },
   grow:   { path:[[PAD,LANE.grow],[B1,LANE.grow],[B2,LANE.free],[XEND,LANE.free]],
-            stops:[[250,LANE.grow,'down'],[390,LANE.grow,'up'],[525,LANE.grow,'down'],[875,LANE.free,'up'],[1030,LANE.free,'up']] },
+            stops:[[220,LANE.grow,'down'],[365,LANE.grow,'up'],[495,LANE.grow,'down'],[1040,LANE.free,'up'],[870,LANE.free,'up']] },
   insight:{ path:[[PAD,LANE.insight],[B1,LANE.insight],[B2,LANE.work],[XEND,LANE.work]],
-            stops:[[400,LANE.insight,'up'],[540,LANE.insight,'down'],[800,LANE.work,'up'],[950,LANE.work,'down'],[1110,LANE.work,'down']] },
+            stops:[[505,LANE.insight,'down'],[800,LANE.work,'up'],[335,LANE.insight,'up'],[960,LANE.work,'down'],[1115,LANE.work,'down']] },
   work:   { path:[[PAD,LANE.work],[B1,LANE.work],[B2,LANE.grow],[XEND,LANE.grow]],
-            stops:[[250,LANE.work,'down'],[390,LANE.work,'up'],[525,LANE.work,'down'],[800,LANE.grow,'up'],[950,LANE.grow,'up'],[1110,LANE.grow,'down']] }
+            stops:[[955,LANE.grow,'up'],[800,LANE.grow,'up'],[530,LANE.work,'down'],[1110,LANE.grow,'up'],[245,LANE.work,'down'],[390,LANE.work,'up']] }
 };
 var LANE_ORDER=["free", "grow", "insight", "work"];
 var LBLW=124;   /* usable width of the reserved label column */
@@ -1912,15 +1929,16 @@ function renderMap(){
       /* GAP is measured from the dot centre to the nearest edge of the
          nearest text line, so a name sits exactly as far from its dot
          whether it is drawn above or below the track.                  */
-      if(side==='up')        { sy=y-22; ly=sy-15; }
-      else if(side==='down') { ly=y+30; sy=ly+14; }
-      else if(side==='right'){ anchor='start'; lx=x+22; ly=y-2; sy=y+12; }
-      else                   { anchor='end';   lx=x-22; ly=y-2; sy=y+12; }
-      dots+='<g class="stop st-'+key+(on?'':' dim')+'" data-id="'+a.id+'">'+
+      if(side==='up')        { sy=y-22-LBL_GAP; ly=sy-15; }
+      else if(side==='down') { ly=y+30+LBL_GAP; sy=ly+14; }
+      else if(side==='right'){ anchor='start'; lx=x+22+LBL_GAP; ly=y-2; sy=y+12; }
+      else                   { anchor='end';   lx=x-22-LBL_GAP; ly=y-2; sy=y+12; }
+      var hitTop=Math.min(y-20,ly-16), hitBot=Math.max(y+20,sy+10);
+      dots+='<g class="stop st-'+key+' '+(STOP_SIZE[a.id]||'md')+(on?'':' dim')+'" data-id="'+a.id+'">'+
         marker(a,x,y,col)+
         '<text class="lbl" x="'+lx+'" y="'+ly+'" text-anchor="'+anchor+'">'+esc(pri(a))+'</text>'+
         '<text class="sub" x="'+lx+'" y="'+sy+'" text-anchor="'+anchor+'">'+esc(alt(a))+'</text>'+
-        '<rect class="hit" x="'+(x-58)+'" y="'+(y-38)+'" width="116" height="84"/>'+
+        '<rect class="hit" x="'+(x-58)+'" y="'+hitTop+'" width="116" height="'+(hitBot-hitTop)+'"/>'+
         '</g>';
     });
   });
@@ -1982,8 +2000,10 @@ function open(id){var L=visible(),i=-1;
    Shown between the departing train and the map: who these agents are, and
    the one idea the map depends on — every station is one agent.        */
 var ANNOUNCE = {"zh": {"kicker": "站內廣播", "sub": "PB AGENT 捷運 ・ 全線", "lines": ["各位旅客您好，歡迎搭乘 PB Agent 捷運。", "本捷運沿線的代理程式（Agent），是 Microsoft 自行打造、內建於 Microsoft 365 Copilot 的 AI 助理 —— 不需自行開發，開啟即可使用。", "本捷運共 <b>20 站、4 條路線，每一個站點即為一個代理程式</b>。", "<b>紅線「新手上路」為免費路線</b>，未持有 Copilot 授權亦可搭乘；其餘三線依用途分為知識解答、資料分析、產出執行。", "抵達各站後，您可先透過<b>模擬對話</b>了解該 Agent 的回覆方式，再一鍵前往 Agent 實際體驗。", "行程期間將播送<b>搭乘指南</b>，請隨時留意站內廣播；如需再次查看，請點選大聲公圖示。", "列車即將發車，請小心月台間隙。"], "go": "發車，前往路網圖 →"}, "en": {"kicker": "Station announcement", "sub": "PB AGENT METRO ・ ALL LINES", "lines": ["Attention passengers: welcome aboard the PB Agent Metro.", "The agents on this metro are AI assistants Microsoft built into Microsoft 365 Copilot — nothing to develop, just open one and go.", "This metro has <b>20 stations across 4 lines, and every station is one agent</b>.", "<b>The red “Start here” line is free to ride</b> — no Copilot licence required. The other three are grouped into knowledge and answers, data and analysis, and creation and execution.", "On arrival at any station, preview how the agent responds through a <b>simulated conversation</b>, then open the agent to try it for yourself.", "A <b>boarding guide</b> is announced along the way. To review it, select the megaphone icon.", "The train is about to depart. Please mind the gap."], "go": "Depart for the map →"}};
-ANNOUNCE.zh.lines[3]='<b>紅線「新手上路」適合初次探索 Agent 的使用者</b>；各站的授權與整合需求不同，請以站點說明與官方文件為準。';
-ANNOUNCE.zh.lines[4]='抵達各站後，您可先透過<b>試乘模擬</b>了解該 Agent 的回覆方式，再一鍵前往 Agent 實際體驗。';
+ANNOUNCE.zh.lines[3]='<b>紅線「新手上路」適合初次探索 Agent 的使用者</b>；各站的授權與整合需求不同，請以站點說明與官方文件為準';
+ANNOUNCE.zh.lines[4]='抵達各站後，您可先透過<b>試乘模擬</b>了解該 Agent 的回覆方式，再一鍵前往 Agent 實際體驗';
+/* The announcement reads as spoken lines, so the trailing full stops are dropped. */
+ANNOUNCE.zh.lines=ANNOUNCE.zh.lines.map(function(line){ return line.replace(/。$/,'') });
 ANNOUNCE.en.lines[3]='<b>The red “Start here” line is an entry point for people exploring agents</b>. Licensing and integration requirements vary by station; check the station description and official documentation.';
 ANNOUNCE.en.lines[4]='On arrival at any station, use the <b>trial simulation</b> to see how the agent responds, then open the agent to try it for yourself.';
 ANNOUNCE.zh.lines[2]=ANNOUNCE.zh.lines[2].replace('20 站',AGENTS.length+' 站');
@@ -2007,7 +2027,7 @@ var BRIEF_LINE_MS=1100,BRIEF_GAP_MS=1400,briefT=null,briefAlign=null;
 function playBrief(){
   stopBrief();
   var wrap=document.getElementById('bfSay'),rows=wrap.querySelectorAll('.briefrow');
-  var button=document.getElementById('bfGo'),actions=button.parentNode,c=ANNOUNCE[st.lang],i=0,lineIndex=0,held=false;
+  var button=document.getElementById('bfGo'),actions=button.parentNode,c=ANNOUNCE[st.lang],i=0,lineIndex=0;
   function alignGrowth(){
     var pa=document.querySelector('#brief .pa'),row=rows[i];
     if(!window.matchMedia('(max-width:680px)').matches){
@@ -2077,7 +2097,7 @@ function playBrief(){
     var lines=rows[i].querySelectorAll('p');
     var wait=lineIndex<lines.length-1?BRIEF_LINE_MS:BRIEF_GAP_MS;
     briefT=setTimeout(function(){
-      if(held||document.hidden){ schedule(); return }
+      if(document.hidden){ schedule(); return }
       if(lineIndex<lines.length-1){
         lineIndex++;
         var showNext=lineIndex===lines.length-1&&i<rows.length-1;
@@ -2105,7 +2125,6 @@ function playBrief(){
     alignGrowth();
     schedule();
   }
-  wrap.onmouseenter=function(){held=true}; wrap.onmouseleave=function(){held=false};
   go(0);
 }
 function stopBrief(){
