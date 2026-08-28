@@ -1313,41 +1313,66 @@ AGENTS=AGENTS.filter(function(agent){
   return agent.id!=="surveys" && agent.id!=="frontline-agent" && agent.id!=="workforce-insights-frontier";
 });
 
-/* Word, Excel and PowerPoint Agents require Microsoft 365, but not necessarily
-  the additional Microsoft 365 Copilot licence. Available sources differ. */
+/* July 2026 ABS overview: prefer its Learn article, or its Blog when no Learn
+   article is listed, for the station's official-document button. */
+var OFFICIAL_DOCS={
+  "idea-coach":"https://learn.microsoft.com/en-us/microsoft-365-copilot/extensibility/agent-template-idea-coach",
+  "word-agent":"https://learn.microsoft.com/en-us/copilot/microsoft-365/wordexcelppt-agents",
+  "excel-agent":"https://learn.microsoft.com/en-us/copilot/microsoft-365/wordexcelppt-agents",
+  "powerpoint-agent":"https://learn.microsoft.com/en-us/copilot/microsoft-365/wordexcelppt-agents",
+  "ai-learning-advisor":"https://learn.microsoft.com/en-us/microsoft-365/copilot/extensibility/agent-template-ai-learning-advisor",
+  "learning":"https://learn.microsoft.com/en-us/viva/learning/learning-agent-overview",
+  "prompt-coach":"https://learn.microsoft.com/en-us/microsoft-365-copilot/extensibility/agent-template-prompt-coach",
+  "writing-coach":"https://learn.microsoft.com/en-us/microsoft-365-copilot/extensibility/agent-template-writing-coach",
+  "career-coach":"https://learn.microsoft.com/en-us/microsoft-365-copilot/extensibility/agent-template-career-coach",
+  "researcher":"https://www.microsoft.com/microsoft-365/blog/2025/03/25/introducing-researcher-and-analyst-in-microsoft-365-copilot/",
+  "analyst":"https://www.microsoft.com/microsoft-365/blog/2025/03/25/introducing-researcher-and-analyst-in-microsoft-365-copilot/",
+  "plan-my-day":"https://learn.microsoft.com/en-us/microsoft-365/copilot/extensibility/agent-template-plan-my-day",
+  "planner-agent":"https://techcommunity.microsoft.com/blog/plannerblog/planner-agent-brings-work-management-directly-into-microsoft-365-copilot/4511720?previewMessage=true",
+  "workflows-frontier":"https://www.microsoft.com/en-us/microsoft-365/blog/2025/10/28/microsoft-365-copilot-now-enables-you-to-build-apps-and-workflows/"
+};
+AGENTS.forEach(function(agent){
+  if(OFFICIAL_DOCS[agent.id]) agent.docs=OFFICIAL_DOCS[agent.id];
+});
+var IDEA_AGENT=AGENTS.filter(function(agent){ return agent.id==="idea-coach" })[0];
+IDEA_AGENT.name="Ideas Coach";
+IDEA_AGENT.en.sub="Ideas Coach";
+
+/* Word, Excel and PowerPoint Agents require Microsoft 365 Copilot, and the
+   tenant must have Anthropic enabled. */
 var WORD_AGENT=AGENTS.filter(function(agent){ return agent.id==="word-agent" })[0];
 WORD_AGENT.zh.sub="文件專家";
-WORD_AGENT.zh.lead="Word Agent 讓你用自然語言描述需求，就生成有標題、段落與專業格式的 Word 文件草稿。你可以用「再短一點」「多加一段」等高層次回饋修改，也能在 Word 中繼續編修。需要 Microsoft 365 Copilot 授權，並可依原有權限使用檔案、郵件、聊天與會議等工作內容。檔案會存到 OneDrive，分享前仍應檢查內容。";
-WORD_AGENT.zh.can=["從描述生成有結構與專業格式的 Word 草稿","用高層次回饋修改，或在 Word 繼續編修","使用你有權限的檔案、郵件、聊天與會議等工作內容","檔案存到 OneDrive，分享前應檢查內容"];
-WORD_AGENT.en.lead="Word Agent turns a natural-language description into a structured, professionally formatted Word draft. Refine it with high-level feedback or continue in Word. A Microsoft 365 Copilot licence is required, and it can use permitted work content such as files, email, chats and meetings. Files are saved to OneDrive and should be reviewed before sharing.";
-WORD_AGENT.en.can=["Generate a structured, professionally formatted Word draft","Refine with high-level feedback or continue in Word","Use permitted files, email, chats and meetings","Save to OneDrive and review before sharing"];
+WORD_AGENT.zh.lead="Word Agent 讓你用自然語言描述需求，就生成有標題、段落與專業格式的 Word 文件草稿。你可以用「再短一點」「多加一段」等高層次回饋修改，也能在 Word 中繼續編修。需要 Microsoft 365 Copilot 授權，且租戶必須啟用 Anthropic；它可依原有權限使用檔案、郵件、聊天與會議等工作內容。檔案會存到 OneDrive，分享前仍應檢查內容。";
+WORD_AGENT.zh.can=["從描述生成有結構與專業格式的 Word 草稿","用高層次回饋修改，或在 Word 繼續編修","使用你有權限的檔案、郵件、聊天與會議等工作內容","需要 Microsoft 365 Copilot，且租戶必須啟用 Anthropic","檔案存到 OneDrive，分享前應檢查內容"];
+WORD_AGENT.en.lead="Word Agent turns a natural-language description into a structured, professionally formatted Word draft. Refine it with high-level feedback or continue in Word. A Microsoft 365 Copilot licence is required, and Anthropic must be enabled for the tenant. It can use permitted work content such as files, email, chats and meetings. Files are saved to OneDrive and should be reviewed before sharing.";
+WORD_AGENT.en.can=["Generate a structured, professionally formatted Word draft","Refine with high-level feedback or continue in Word","Use permitted files, email, chats and meetings","Require Microsoft 365 Copilot and Anthropic enabled for the tenant","Save to OneDrive and review before sharing"];
 
 var POWERPOINT_AGENT=AGENTS.filter(function(agent){ return agent.id==="powerpoint-agent" })[0];
 POWERPOINT_AGENT.zh.sub="簡報專家";
-POWERPOINT_AGENT.zh.lead="PowerPoint Agent 依你的主題或目標產生整份簡報，包含投影片、版面與設計主題。你可以用「加一張投影片」等高層次回饋調整，也能在 PowerPoint 中繼續編修。需要 Microsoft 365 Copilot 授權，並可依原有權限使用工作內容。簡報會存到 OneDrive，使用前仍應檢查內容。";
-POWERPOINT_AGENT.zh.can=["依主題、目標與張數生成完整簡報","建立投影片版面與設計主題","用高層次回饋調整，或在 PowerPoint 繼續編修","使用你有權限的工作內容","存到 OneDrive，使用前應檢查內容"];
-POWERPOINT_AGENT.en.lead="PowerPoint Agent builds a complete presentation from your topic or goals, including slides, layouts and design themes. Refine it with high-level feedback or continue in PowerPoint. A Microsoft 365 Copilot licence is required, and it can use permitted work content. Presentations are saved to OneDrive and should be reviewed before use.";
-POWERPOINT_AGENT.en.can=["Build a complete deck from a topic, goal and slide count","Create slide layouts and a design theme","Refine with high-level feedback or continue in PowerPoint","Use permitted work content","Save to OneDrive and review before use"];
+POWERPOINT_AGENT.zh.lead="PowerPoint Agent 依你的主題或目標產生整份簡報，包含投影片、版面與設計主題。你可以用「加一張投影片」等高層次回饋調整，也能在 PowerPoint 中繼續編修。需要 Microsoft 365 Copilot 授權，且租戶必須啟用 Anthropic；它可依原有權限使用工作內容。簡報會存到 OneDrive，使用前仍應檢查內容。";
+POWERPOINT_AGENT.zh.can=["依主題、目標與張數生成完整簡報","建立投影片版面與設計主題","用高層次回饋調整，或在 PowerPoint 繼續編修","需要 Microsoft 365 Copilot，且租戶必須啟用 Anthropic","使用你有權限的工作內容","存到 OneDrive，使用前應檢查內容"];
+POWERPOINT_AGENT.en.lead="PowerPoint Agent builds a complete presentation from your topic or goals, including slides, layouts and design themes. Refine it with high-level feedback or continue in PowerPoint. A Microsoft 365 Copilot licence is required, and Anthropic must be enabled for the tenant. It can use permitted work content. Presentations are saved to OneDrive and should be reviewed before use.";
+POWERPOINT_AGENT.en.can=["Build a complete deck from a topic, goal and slide count","Create slide layouts and a design theme","Refine with high-level feedback or continue in PowerPoint","Require Microsoft 365 Copilot and Anthropic enabled for the tenant","Use permitted work content","Save to OneDrive and review before use"];
 
 var EXCEL_AGENT=AGENTS.filter(function(agent){ return agent.id==="excel-agent" })[0];
 EXCEL_AGENT.zh.sub="試算專家";
 EXCEL_AGENT.zh.tagline="用一句話描述，就生成含分頁、公式與圖表的活頁簿。";
-EXCEL_AGENT.zh.lead="Excel Agent 讓你在 Copilot Chat 用自然語言建立活頁簿。描述預算追蹤表、專案計畫或財務模型等需求，它就能建立分頁、整理資料，加入可運作的公式與圖表。需要 Microsoft 365 Copilot 授權，並可依原有權限使用工作內容。檔案會存到 OneDrive，分享前仍應檢查內容。";
-EXCEL_AGENT.zh.can=["用自然語言描述就建立活頁簿","建立分頁並整理資料結構","加入可運作的公式與圖表","用高層次回饋修改，或在 Excel 繼續編修","存到 OneDrive，並使用你有權限的工作內容"];
+EXCEL_AGENT.zh.lead="Excel Agent 讓你在 Copilot Chat 用自然語言建立與分析活頁簿，能產生公式與摘要，並以反覆推理完成多步驟資料工作。需要 Microsoft 365 Copilot 授權，且租戶必須啟用 Anthropic；它可依原有權限使用工作內容。檔案會存到 OneDrive，分享前仍應檢查內容。";
+EXCEL_AGENT.zh.can=["用自然語言建立與分析活頁簿","產生公式與摘要","以反覆推理完成多步驟資料工作","需要 Microsoft 365 Copilot，且租戶必須啟用 Anthropic","存到 OneDrive，並使用你有權限的工作內容"];
 EXCEL_AGENT.en.tagline="Describe it and get a workbook with sheets, formulas and charts.";
-EXCEL_AGENT.en.lead="Excel Agent creates workbooks from natural-language requests in Copilot Chat. Describe a budget tracker, project plan or financial model and it can set up sheets, organise data, and add working formulas and charts. A Microsoft 365 Copilot licence is required, and it can use permitted work content. Files are saved to OneDrive and should be reviewed before sharing.";
-EXCEL_AGENT.en.can=["Create a workbook from a plain-language description","Set up sheets and organise data","Add working formulas and charts","Refine with high-level feedback or continue in Excel","Save to OneDrive and use permitted work content"];
+EXCEL_AGENT.en.lead="Excel Agent builds and analyses spreadsheets using natural language. It generates formulas and summaries and uses iterative reasoning for multi-step data tasks. A Microsoft 365 Copilot licence is required, and Anthropic must be enabled for the tenant. It can use permitted work content. Files are saved to OneDrive and should be reviewed before sharing.";
+EXCEL_AGENT.en.can=["Build and analyse spreadsheets using natural language","Generate formulas and summaries","Use iterative reasoning for multi-step data tasks","Require Microsoft 365 Copilot and Anthropic enabled for the tenant","Save to OneDrive and use permitted work content"];
 
 var PLAN_DAY_AGENT=AGENTS.filter(function(agent){ return agent.id==="plan-my-day" })[0];
 PLAN_DAY_AGENT.status="ga";
-PLAN_DAY_AGENT.zh.tagline="用 Microsoft 365 資料整理一份完整的晨間簡報。";
-PLAN_DAY_AGENT.zh.lead="使用 Microsoft 365 資料彙整完整的晨間簡報，在工作優先事項與個人健康之間取得平衡，讓你每天一開始就掌握資訊、做好準備，也與工作及生活中重要的事情保持連結。";
-PLAN_DAY_AGENT.zh.can=["用 Microsoft 365 資料彙整晨間簡報","整理當天需要掌握的工作資訊","平衡工作優先事項與個人健康","協助你以充分準備的狀態開始一天"];
-PLAN_DAY_AGENT.zh.prompts=["幫我整理今天的完整晨間簡報。","今天有哪些工作優先事項，也請提醒我留意個人健康。","根據 Microsoft 365 裡的資料，我今天需要先掌握哪些事？"];
-PLAN_DAY_AGENT.en.tagline="A comprehensive morning briefing from Microsoft 365 data.";
-PLAN_DAY_AGENT.en.lead="Compiles a comprehensive morning briefing from Microsoft 365 data. It balances business priorities with personal wellness, helping you start informed, prepared and connected to what matters professionally and personally.";
-PLAN_DAY_AGENT.en.can=["Compile a morning briefing from Microsoft 365 data","Organise the work information you need today","Balance business priorities with personal wellness","Help you begin the day informed and prepared"];
-PLAN_DAY_AGENT.en.prompts=["Compile my comprehensive morning briefing for today.","What are today's business priorities, and where should I protect my wellbeing?","From my Microsoft 365 data, what do I need to know first today?"];
+PLAN_DAY_AGENT.zh.tagline="把行事曆、郵件、Teams 訊息與檔案整理成有優先順序的晨間簡報。";
+PLAN_DAY_AGENT.zh.lead="Plan My Day 會把你的行事曆、郵件、Teams 訊息與檔案整理成有優先順序的晨間簡報，指出今天要先處理什麼、哪些可以稍後再做，以及哪些事項現在需要決定。需要 Microsoft 365 Copilot 授權。";
+PLAN_DAY_AGENT.zh.can=["彙整行事曆、郵件、Teams 訊息與檔案","產生有優先順序的晨間簡報","指出應先處理與可以稍後處理的事項","找出現在需要決定的事項"];
+PLAN_DAY_AGENT.zh.prompts=["根據我的行事曆、郵件、Teams 訊息與檔案，整理今天的晨間簡報。","今天要先處理什麼，哪些可以稍後再做？","今天有哪些事項需要我現在決定？"];
+PLAN_DAY_AGENT.en.tagline="Turn your calendar, email, Teams messages and files into a prioritised morning briefing.";
+PLAN_DAY_AGENT.en.lead="Plan My Day turns your calendar, email, Teams messages and files into a prioritised morning briefing, showing what to focus on first, what can wait and what needs a decision now. A Microsoft 365 Copilot licence is required.";
+PLAN_DAY_AGENT.en.can=["Bring together calendar, email, Teams messages and files","Create a prioritised morning briefing","Show what to focus on first and what can wait","Surface decisions needed now"];
+PLAN_DAY_AGENT.en.prompts=["Build today's morning briefing from my calendar, email, Teams messages and files.","What should I focus on first, and what can wait?","Which items need a decision now?"];
 
 var PLANNER_AGENT=AGENTS.filter(function(agent){ return agent.id==="planner-agent" })[0];
 PLANNER_AGENT.zh.tagline="在對話中管理 Planner 的團隊專案與日常任務。";
@@ -1449,17 +1474,17 @@ AGENTS.push(FACILITATOR_AGENT,INTERPRETER_AGENT);
 /* Learning sits in the big JSON above; rewritten here so it reads apart from Learning Coach. */
 (function(){
   var l; for(var i=0;i<AGENTS.length;i++) if(AGENTS[i].id==="learning") l=AGENTS[i];
-  l.zh.tagline="依你的角色與工作軌跡，推薦該學什麼並追蹤進度。";
-  l.zh.lead="依你的角色、技能檔案與最近在 Microsoft 365 的活動，推薦影片、課程、認證與公司內部資源；也能開啟組織指派的訓練、用 AI 產生的測驗檢核程度，並依技能評估產出學習計畫、追蹤進度與連續學習紀錄。回覆同時參考組織內部來源與外部網路資源。可免費加入使用；部分功能需要額外授權（如 Viva Learning、LinkedIn Learning）。";
-  l.zh.can=["依角色與近期活動推薦課程、影片與認證","開啟組織指派的訓練，並用 AI 測驗檢核","依技能評估產出學習計畫","追蹤學習進度與連續紀錄","強化 Microsoft 365 Copilot 的上手與應用"];
+  l.zh.tagline="依角色與工作內容，在工作流程中培養 Copilot 與 AI 技能。";
+  l.zh.lead="Learning Agent 依使用者的角色與工作內容，提供個人化、融入工作流程的 Copilot 與 AI 學習，包括每日提示、技能評估與互動式角色扮演，讓使用者邊做邊學。需要 Microsoft 365 Copilot 授權；角色扮演功能需要整合 LinkedIn Learning 或 Skillsoft。";
+  l.zh.can=["依角色與工作內容提供個人化學習","在工作流程中培養 Copilot 與 AI 技能","提供每日提示與技能評估","透過互動式角色扮演練習","角色扮演需整合 LinkedIn Learning 或 Skillsoft"];
   l.zh.who="想持續進修的員工，以及要推動組織學習的人資與主管。";
-  l.zh.prompts=["依我的角色與最近的工作，推薦這一季該學的主題。","公司指派給我的訓練，還有哪些沒完成？","針對這個主題出一份測驗，檢查我學到什麼程度。"];
+  l.zh.prompts=["依我的角色與目前工作，推薦今天的 Copilot 學習內容。","幫我評估目前的 Copilot 與 AI 技能。","用角色扮演讓我練習在工作中使用 Copilot。"];
   l.zh.product="Microsoft 365 Copilot";
-  l.en.tagline="Personalised upskilling based on your role and your work in Microsoft 365.";
-  l.en.lead="Suggests videos, courses, credentials and internal resources from your role, skills profile and recent Microsoft 365 activity. It also opens the training your organisation assigned, checks your understanding with AI-generated quizzes, builds learning plans from skill assessments, and tracks progress and streaks. Answers draw on both internal and external sources. Free to add and use; some capabilities need extra licences such as Viva Learning or LinkedIn Learning.";
-  l.en.can=["Recommend courses, videos and credentials from your role and activity","Open assigned organisational training and quiz you on it","Build a learning plan from a skills assessment","Track progress and keep a streak going","Strengthen your Microsoft 365 Copilot skills"];
+  l.en.tagline="Build Copilot and AI skills in the flow of work, tailored to your role.";
+  l.en.lead="Learning Agent helps employees build Copilot and AI skills with personalised, in-the-flow learning tailored to their roles and work. It provides daily tips, skill assessments and interactive role play so users learn by doing. A Microsoft 365 Copilot licence is required; role play requires integration with LinkedIn Learning or Skillsoft.";
+  l.en.can=["Tailor learning to a user's role and work","Build Copilot and AI skills in the flow of work","Provide daily tips and skill assessments","Practise through interactive role play","Require LinkedIn Learning or Skillsoft integration for role play"];
   l.en.who="Employees investing in their own growth, plus HR and managers driving org-wide learning.";
-  l.en.prompts=["Given my role and recent work, what should I learn this quarter?","Which of my assigned trainings are still outstanding?","Quiz me on this topic and tell me where I stand."];
+  l.en.prompts=["Based on my role and current work, what should I learn about Copilot today?","Assess my current Copilot and AI skills.","Use role play to help me practise using Copilot at work."];
   l.en.product="Microsoft 365 Copilot";
 })();
 var ROUTE_OVERRIDES={
@@ -1479,8 +1504,7 @@ var ROUTE_OVERRIDES={
 AGENTS.forEach(function(agent){
   if(ROUTE_OVERRIDES[agent.id]) agent.domain=ROUTE_OVERRIDES[agent.id];
 });
-/* Neither licensed nor free: charged on consumption. */
-var USAGE_BILLED={"writing-coach":1,"career-coach":1};
+var USAGE_BILLED={};
 var KEYWORDS={
   "idea-coach":"想法 點子 創意 靈感 發想 腦力激盪 企劃 卡關 問題拆解 brainstorm ideation inspiration",
   "word-agent":"文件 文書 報告 提案 公告 指南 草稿 word document proposal report",
@@ -1645,6 +1669,17 @@ var T={
   foot:'Agent types and release status follow Microsoft’s official information, and the descriptions reference Microsoft’s official documentation. Agents are released and updated continually; availability depends on your licence and tenant settings.'
  }
 };
+
+T.zh.notes[5][2]=[
+  '多數工作型 Agent 需要 Microsoft 365 Copilot 授權。',
+  'Word、Excel、PowerPoint Agent 還需要租戶啟用 Anthropic；其他需求依各站說明。',
+  '若無法開啟，可能是管理員尚未啟用，或尚未推送到你的環境。'
+];
+T.en.notes[5][2]=[
+  'Most work-focused agents require a Microsoft 365 Copilot licence.',
+  'Word, Excel and PowerPoint Agents also require Anthropic enabled for the tenant; see each station for other requirements.',
+  'If an agent will not open, your admin may not have enabled it yet, or it has not reached your tenant.'
+];
 
 /* Copy the agent's direct link. Same feedback as the prompt copy buttons:
    a toast at the bottom, plus a temporary label on the button itself. The
@@ -1873,6 +1908,8 @@ function open(id){var L=visible(),i=-1;
    Shown between the departing train and the map: who these agents are, and
    the one idea the map depends on — every station is one agent.        */
 var ANNOUNCE = {"zh": {"kicker": "站內廣播", "sub": "PB AGENT 捷運 ・ 全線", "lines": ["各位旅客您好，歡迎搭乘 PB Agent 捷運。", "本捷運沿線的代理程式（Agent），是 Microsoft 自行打造、內建於 Microsoft 365 Copilot 的 AI 助理 —— 不需自行開發，開啟即可使用。", "本捷運共 <b>20 站、4 條路線，每一個站點即為一個代理程式</b>。", "<b>紅線「新手上路」為免費路線</b>，未持有 Copilot 授權亦可搭乘；其餘三線依用途分為知識解答、資料分析、產出執行。", "抵達各站後，您可先透過<b>模擬對話</b>了解該 Agent 的回覆方式，再一鍵前往 Agent 實際體驗。", "行程期間將播送<b>搭乘指南</b>，請隨時留意站內廣播；如需再次查看，請點選大聲公圖示。", "列車即將發車，請小心月台間隙。"], "go": "發車，前往路網圖 →"}, "en": {"kicker": "Station announcement", "sub": "PB AGENT METRO ・ ALL LINES", "lines": ["Attention passengers: welcome aboard the PB Agent Metro.", "The agents on this metro are AI assistants Microsoft built into Microsoft 365 Copilot — nothing to develop, just open one and go.", "This metro has <b>20 stations across 4 lines, and every station is one agent</b>.", "<b>The red “Start here” line is free to ride</b> — no Copilot licence required. The other three are grouped into knowledge and answers, data and analysis, and creation and execution.", "On arrival at any station, preview how the agent responds through a <b>simulated conversation</b>, then open the agent to try it for yourself.", "A <b>boarding guide</b> is announced along the way. To review it, select the megaphone icon.", "The train is about to depart. Please mind the gap."], "go": "Depart for the map →"}};
+ANNOUNCE.zh.lines[3]='<b>紅線「新手上路」適合初次探索 Agent 的使用者</b>；各站的授權與整合需求不同，請以站點說明與官方文件為準。其餘三線依用途分為知識解答、資料分析、產出執行。';
+ANNOUNCE.en.lines[3]='<b>The red “Start here” line is an entry point for people exploring agents</b>. Licensing and integration requirements vary by station; check the station description and official documentation. The other three lines cover knowledge and answers, data and analysis, and creation and execution.';
 ANNOUNCE.zh.lines[2]=ANNOUNCE.zh.lines[2].replace('20 站',AGENTS.length+' 站');
 ANNOUNCE.en.lines[2]=ANNOUNCE.en.lines[2].replace('20 stations',AGENTS.length+' stations');
 var brief=document.getElementById('brief');
